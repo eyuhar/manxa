@@ -1,13 +1,31 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Layout from './components/ui/Layout' // oder der korrekte Pfad
+import Home from './pages/Home'
+import Discover from './pages/Discover'
+import History from './pages/History'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import NotFound from './pages/NotFound'
+import MyManxa from './pages/MyManxa'
+import Profile from './pages/Profile'
+import ProtectedRoute from "./components/ProtectedRoute"
 
 function App() {
-
   return (
-    <>
-      <div className="p-4">
-        <h1 className="text-2xl font-bold text-primary">Manxa Reader App</h1>
-        <p className="text-muted-foreground">Hier entsteht deine Web-App</p>
-      </div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="discover" element={<Discover />} />
+          <Route path="myManxa" element={<ProtectedRoute><MyManxa /></ProtectedRoute>} />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+          <Route path="history" element={<ProtectedRoute><History /></ProtectedRoute>} />
+          <Route path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
