@@ -1,21 +1,24 @@
-import { useState } from "react";
-import { login, saveToken } from "../services/auth";
+import { useState, type JSX } from "react";
+import { login as authLogin, saveToken } from "../services/auth";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
+import { useAuth } from "@/contexts/AuthContext";
 
-function Login() {
+function Login(): JSX.Element {
   // local state for input fields
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const { login } = useAuth();
 
   const navigate = useNavigate();
 
   // useMutation handles the login call
   const mutation = useMutation({
-    mutationFn: () => login(email, password),
-    onSuccess: (data) => {
+    mutationFn: (): Promise<{ token: string }> => authLogin(email, password),
+    onSuccess: (data: { token: string }) => {
       // save token and redirect on success
       saveToken(data.token);
+      login(data.token);
       navigate("/");
     },
     onError: () => {
@@ -24,7 +27,7 @@ function Login() {
   });
 
   // form submit handler
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     mutation.mutate(); // triggers login
   };

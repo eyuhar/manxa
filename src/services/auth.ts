@@ -2,6 +2,11 @@ export type LoginResponse = {
   token: string;
 }
 
+export type ApiResponse<T> = {
+  success: boolean;
+  data: T;
+}
+
 export type ProfileResponse = {
   id: number;
   email: string;
@@ -37,7 +42,7 @@ export async function fetchProfile(token: string): Promise<ProfileResponse>{
     throw new Error("Failed to fetch profile");
   }
   
-  const json = await res.json();
+  const json: ApiResponse<ProfileResponse> = await res.json();
 
   return json.data;
 }
