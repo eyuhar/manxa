@@ -8,7 +8,7 @@ function Header(): JSX.Element {
   const { user, isLoading, logout } = useAuth();
 
   return (
-    <header className='w-full px-4 py-2 flex items-center gap-2 justify-between text-sm'>
+    <header className='w-full px-4 py-2 flex items-center gap-2 justify-between'>
       <div className='flex items-center gap-1'>
         <img
           src="src/assets/ManxaLogo.png"
@@ -38,13 +38,13 @@ function Header(): JSX.Element {
           <span>Loading...</span>
         ) : user ? (
           <div className='flex items-center gap-2'>
-            <span className='text-sm font-medium'>{user.user_name}</span>
+            <span className='font-medium'>{user.user_name}</span>
             <Button className='bg-gray-800 text-white' onClick={logout}>
               Logout
             </Button>
           </div>
         ) : (
-          <Button className='bg-gray-800 text-white'>
+          <Button variant="outline" >
             <Link to="login">Login</Link>
           </Button>
         )}
