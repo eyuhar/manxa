@@ -1,6 +1,7 @@
 import {
   createContext,
   useContext,
+  useEffect,
   useState,
   type JSX,
   type ReactNode,
@@ -33,10 +34,11 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
   const [token, setToken] = useState<string | null>(getToken())
   const queryClient = useQueryClient()
 
-  const { data: user, isLoading }: UseQueryResult<User | null, Error> = useQuery({
+  const { data: user, isLoading, error }: UseQueryResult<User | null, Error> = useQuery({
     queryKey: ["profile"],
     queryFn: () => fetchProfile(token!),
     enabled: !!token,
+    retry: false, // do not retry on failure
   })
 
   const login = (newToken: string | null): void => {
@@ -51,6 +53,12 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
     queryClient.removeQueries({ queryKey: ["profile"] })
     window.location.reload() // reloads app state
   }
+
+  useEffect(() => {
+    if (error?.message === "Unauthorized: Invalid token") {
+      logout() // automatically logout if token is invalid
+    }
+  }, [error])
 
   return (
     <AuthContext.Provider value={{ user: user ?? null, isLoading, logout, login}}>

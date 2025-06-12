@@ -117,11 +117,7 @@ function Header(): JSX.Element {
                   <Link to="/" className='w-full font-medium test-sm'>Logout</Link>
                 </DropdownMenuItem>
               </>
-            ) : (
-              <DropdownMenuItem>
-                <Link to="login" className='w-full font-medium test-sm'>Login</Link>
-              </DropdownMenuItem>
-            )}
+            ): <></>}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

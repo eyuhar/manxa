@@ -38,6 +38,11 @@ export async function fetchProfile(token: string): Promise<ProfileResponse>{
     },
   });
 
+  if (res.status === 401){
+    //invalid token
+    throw new Error("Unauthorized: Invalid token");
+  }
+
   if (!res.ok) {
     throw new Error("Failed to fetch profile");
   }
