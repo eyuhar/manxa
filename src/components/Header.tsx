@@ -1,6 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
-import { Button } from './button';
+import { Button } from './ui/button';
 import type { JSX } from 'react';
 import {
   DropdownMenu,
@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
   DropdownMenuLabel
-} from './dropdown-menu';
+} from './ui/dropdown-menu';
 
 
 function Header(): JSX.Element {
@@ -96,25 +96,25 @@ function Header(): JSX.Element {
               </DropdownMenuItem>
             )}
             <DropdownMenuItem>
-              <Link to="/" className='w-full font-medium test-sm'>Home</Link>
+              <Link to="/" className='w-full font-medium text-sm'>Home</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link to="discover" className='w-full font-medium test-sm'>Discover</Link>
+              <Link to="discover" className='w-full font-medium text-sm'>Discover</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link to="myManxa" className='w-full font-medium test-sm'>MyManxa</Link>
+              <Link to="myManxa" className='w-full font-medium text-sm'>MyManxa</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link to="history" className='w-full font-medium test-sm'>History</Link>
+              <Link to="history" className='w-full font-medium text-sm'>History</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link to="profile" className='w-full font-medium test-sm'>Profile</Link>
+              <Link to="profile" className='w-full font-medium text-sm'>Profile</Link>
             </DropdownMenuItem>
             {user ? (
               <>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logout} className='w-full'>
-                  <Link to="/" className='w-full font-medium test-sm'>Logout</Link>
+                  <Link to="/" className='w-full font-medium text-sm'>Logout</Link>
                 </DropdownMenuItem>
               </>
             ): <></>}
