@@ -1,6 +1,6 @@
 import { useState, type JSX } from "react";
-import { login as authLogin, saveToken } from "../services/auth";
-import { useNavigate } from "react-router-dom";
+import { login as authLogin, saveToken, type LoginResponse } from "../services/auth";
+import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -24,8 +24,8 @@ function Login(): JSX.Element {
 
   // useMutation handles the login call
   const mutation = useMutation({
-    mutationFn: (): Promise<{ token: string }> => authLogin(email, password),
-    onSuccess: (data: { token: string }) => {
+    mutationFn: (): Promise<LoginResponse> => authLogin(email, password),
+    onSuccess: (data: LoginResponse) => {
       // save token and redirect on success
       saveToken(data.token);
       login(data.token);
@@ -90,16 +90,13 @@ function Login(): JSX.Element {
                 <Button type="submit" disabled={mutation.isPending} className="w-full">
                   {mutation.isPending ? "Logging in..." : "Login"}
                 </Button>
-                <Button variant="outline" className="w-full">
-                  Login with Google
-                </Button>
               </div>
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <a href="#" className="underline underline-offset-4">
+              <Link to="/register" className="underline underline-offset-4">
                 Sign up
-              </a>
+              </Link>
             </div>
           </form>
         </CardContent>

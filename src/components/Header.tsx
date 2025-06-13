@@ -25,27 +25,27 @@ function Header(): JSX.Element {
             className='w-34 bg-transparent mr-2'
           />
           <nav className='flex gap-1 font-medium'>
-            <Button variant="ghost">
+            <Button variant="ghost" asChild>
               <Link to="/">
                 Home
               </Link>
             </Button>
-            <Button variant="ghost">
+            <Button variant="ghost" asChild>
               <Link to="discover">
                 Discover
               </Link>
             </Button>
-            <Button variant="ghost">
+            <Button variant="ghost" asChild>
               <Link to="myManxa">
                 MyManxa
               </Link>
             </Button>
-            <Button variant="ghost">
+            <Button variant="ghost" asChild>
               <Link to="history">
                 History
               </Link>
             </Button>
-            <Button variant="ghost">
+            <Button variant="ghost" asChild>
               <Link to="profile">
                 Profile
               </Link>
@@ -57,13 +57,18 @@ function Header(): JSX.Element {
             <span>Loading...</span>
           ) : user ? (
             <div className='flex items-center gap-2'>
-              <span className='font-medium text-base'>{user.user_name}</span>
-              <Button variant="outline" onClick={logout}>
-                Logout
+              <div className='flex gap-1'>
+                <svg className="w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+                <div className='relative mr-auto min-md:max-w-15 min-lg:max-w-80 overflow-hidden text-ellipsis whitespace-nowrap'>
+                  <span className='font-medium text-base'>{user.user_name}</span>
+                </div>
+              </div>
+              <Button variant="outline" className='cursor-pointer' onClick={logout}>
+                <p className='w-full test-sm font-medium'>Logout</p>
               </Button>
             </div>
           ) : (
-            <Button variant="outline" >
+            <Button variant="outline" asChild>
               <Link to="login">Login</Link>
             </Button>
           )}
@@ -77,7 +82,7 @@ function Header(): JSX.Element {
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className='focus-visible:ring-0'>
+            <Button variant="outline" className='focus-visible:ring-0 cursor-pointer'>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>menu</title><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" /></svg>
               Menu
             </Button>
@@ -85,7 +90,12 @@ function Header(): JSX.Element {
           <DropdownMenuContent className='mr-4'>
             {user ? (
               <>
-                <DropdownMenuLabel className='font-bold text-base'>{user.user_name}</DropdownMenuLabel>
+                <DropdownMenuLabel className='max-w-140 overflow-hidden text-ellipsis whitespace-nowrap font-bold text-base flex gap-1'>
+                  <div>
+                    <svg className="w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+                  </div>
+                  {user.user_name}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
               </>
             ) : (

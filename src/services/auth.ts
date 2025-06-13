@@ -1,4 +1,11 @@
+export type RegisterResponse = {
+  success: boolean;
+  message: string;
+}
+
 export type LoginResponse = {
+  success: boolean;
+  message: string;
   token: string;
 }
 
@@ -14,6 +21,20 @@ export type ProfileResponse = {
   created_at: string;
 }
 
+export async function register(email: string, password: string, username: string): Promise<RegisterResponse> {
+  const res = await fetch("http://52.59.130.106/api/register.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password, user_name: username }),
+  });
+
+  if (!res.ok) {
+    throw new Error("Registration failed");
+  }
+
+  return res.json();
+}
+
 // sends credentials and returns token from backend
 export async function login(email: string, password: string): Promise<LoginResponse> {
   const res = await fetch("http://52.59.130.106/api/login.php", {
@@ -26,7 +47,7 @@ export async function login(email: string, password: string): Promise<LoginRespo
     throw new Error("Login failed");
   }
 
-  return res.json(); // expects { token: string }
+  return res.json();
 }
 
 export async function fetchProfile(token: string): Promise<ProfileResponse>{
