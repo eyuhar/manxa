@@ -117,5 +117,20 @@
   body {
     @apply bg-background text-foreground;
   }
+
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    width: 3px;
+    background-color: var(--color-background);
+  }
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: var(--color-background);
+  }
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-foreground);
+    border-radius: 100vh;
+  }
+}
 }
 

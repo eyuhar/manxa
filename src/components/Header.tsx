@@ -25,27 +25,27 @@ function Header(): JSX.Element {
             className='w-34 bg-transparent mr-2'
           />
           <nav className='flex gap-1 font-medium'>
-            <Button variant="ghost" asChild>
+            <Button variant="link" asChild>
               <Link to="/">
                 Home
               </Link>
             </Button>
-            <Button variant="ghost" asChild>
+            <Button variant="link" asChild>
               <Link to="discover">
                 Discover
               </Link>
             </Button>
-            <Button variant="ghost" asChild>
+            <Button variant="link" asChild>
               <Link to="myManxa">
                 MyManxa
               </Link>
             </Button>
-            <Button variant="ghost" asChild>
+            <Button variant="link" asChild>
               <Link to="history">
                 History
               </Link>
             </Button>
-            <Button variant="ghost" asChild>
+            <Button variant="link" asChild>
               <Link to="profile">
                 Profile
               </Link>
@@ -54,15 +54,13 @@ function Header(): JSX.Element {
         </div>
         <div>
           {isLoading ? (
-            <span>Loading...</span>
+            <span>
+              <div className="p-4 flex items-center justify-center">
+                    <svg className="w-8 animate-spin fill-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>loading</title><path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" /></svg>
+              </div>;
+            </span>
           ) : user ? (
             <div className='flex items-center gap-2'>
-              <div className='flex gap-1'>
-                <svg className="w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
-                <div className='relative mr-auto min-md:max-w-15 min-lg:max-w-80 overflow-hidden text-ellipsis whitespace-nowrap'>
-                  <span className='font-medium text-base'>{user.user_name}</span>
-                </div>
-              </div>
               <Button variant="outline" className='cursor-pointer' onClick={logout}>
                 <p className='w-full test-sm font-medium'>Logout</p>
               </Button>
@@ -90,7 +88,7 @@ function Header(): JSX.Element {
           <DropdownMenuContent className='mr-4'>
             {user ? (
               <>
-                <DropdownMenuLabel className='max-w-140 overflow-hidden text-ellipsis whitespace-nowrap font-bold text-base flex gap-1'>
+                <DropdownMenuLabel className='max-w-140 overflow-hidden text-ellipsis whitespace-nowrap font-bold text-base flex items-center gap-1'>
                   <div>
                     <svg className="w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
                   </div>
@@ -99,11 +97,14 @@ function Header(): JSX.Element {
                 <DropdownMenuSeparator />
               </>
             ) : (
-              <DropdownMenuItem className='flex items-center justify-center focus:bg-red'>
-                <Button>
-                  <Link to="login" className='w-full'>Login</Link>
-                </Button>
-              </DropdownMenuItem>
+              <>
+                <DropdownMenuItem className='flex items-center justify-center focus:bg-red'>
+                  <Button>
+                    <Link to="login" className='w-full'>Login</Link>
+                  </Button>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+              </>
             )}
             <DropdownMenuItem>
               <Link to="/" className='w-full font-medium text-sm'>Home</Link>

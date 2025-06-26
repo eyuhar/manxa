@@ -67,6 +67,7 @@ function Register(): JSX.Element {
                 <Input
                   id="username"
                   type="text"
+                  autoComplete='username'
                   placeholder="Username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -78,6 +79,7 @@ function Register(): JSX.Element {
                 <Input
                   id="email"
                   type="email"
+                  autoComplete='email'
                   placeholder="m@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -95,7 +97,7 @@ function Register(): JSX.Element {
                   required />
               </div>
               <div className="grid gap-3">
-                <Label htmlFor="confirmPpassword">Confirm Password</Label>
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
                 <Input
                   id="confirmPassword"
                   type="password"

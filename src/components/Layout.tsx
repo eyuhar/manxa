@@ -6,7 +6,7 @@ export default function Layout(): JSX.Element {
   return (
     <>
       <Header />
-      <main className="p-4">
+      <main className="p-4 flex flex-col items-center">
         <Outlet />
       </main>
     </>
