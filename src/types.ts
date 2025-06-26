@@ -3,7 +3,7 @@ export type Manxa = {
     url: string;
     img: string;
     newestChapter: string;
-    summary: string;
+    summary?: string;
 }
 
 export type ManxaListResponse = {

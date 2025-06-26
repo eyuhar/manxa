@@ -8,18 +8,22 @@ type Props = {
     url: string;
 };
 
+// card UI to display manxa cover and detailed manxa info, for use in ManxaCarousel
 export default function ManxaCardDetailed({ url }: Props): JSX.Element {
+    //fetch data of required manxa
     const { data, isLoading } = useQuery({
         queryKey: ['ManxaCardDetailed', url],
         queryFn: () => fetchManxa(url),
     });
 
+    //show loading icon if data is still loading
     if (isLoading) {
         return <div className="p-4 flex items-center justify-center">
             <svg className="w-8 animate-spin fill-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>loading</title><path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" /></svg>
         </div>;
     }
 
+    //show message if fetched data is empty
     if (!data) {
         return <div className="p-4">Manxa not found.</div>;
     }
