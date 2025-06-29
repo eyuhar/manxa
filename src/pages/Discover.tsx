@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { fetchManxaList, searchManxas } from '@/services/manxa';
 import type { Manxa } from '@/types';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState, type JSX } from 'react';
 
 function Discover(): JSX.Element {
@@ -83,7 +83,7 @@ function Discover(): JSX.Element {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="py-2 mb-6 max-w-2xl rounded-r-none focus-visible:ring-0"
+          className="py-2 mb-5 max-w-2xl rounded-r-none focus-visible:ring-0"
         />
         <Button
           className="rounded-l-none border-l-0"
@@ -93,6 +93,12 @@ function Discover(): JSX.Element {
           Search
         </Button>
       </div>
+
+      {data?.pages[0]?.data?.results && data?.pages[0]?.data?.results?.length > 0 && (
+        <div className='mb-6 text-muted-foreground text-sm'>
+          {data?.pages[0]?.data?.totalResults} results
+        </div>
+      )}      
 
       {isLoading && (
         <div className="p-4 flex items-center justify-center">
