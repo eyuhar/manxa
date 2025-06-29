@@ -17,7 +17,7 @@ type Props = {
 
 export default function ManxaCarousel({ manxas }: Props): JSX.Element {
     return (
-        <Carousel className="xl:max-w-6xl md:max-w-3xl" plugins={[Autoplay({delay: 6000}),]}>
+        <Carousel className="xl:max-w-6xl md:max-w-3xl" plugins={[Autoplay({delay: 3000, stopOnMouseEnter: true, stopOnInteraction: false}),]}>
             <CarouselContent>
                 {manxas.map((manxa:Manxa, i:number) => (
                     <CarouselItem key={i}>
