@@ -18,7 +18,7 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
 
     //show loading icon if data is still loading
     if (isLoading) {
-        return <div className="p-4 flex items-center justify-center">
+        return <div className="p-4 flex h-100 items-center justify-center">
             <svg
                 className="w-8 animate-spin fill-foreground"
                 xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +60,7 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
                         </div>
                         <div className="flex flex-col">
                             <CardTitle className="font-medium text-sm">Views:</CardTitle>
-                            <CardDescription>{manxaData.views}</CardDescription>
+                            <CardDescription>{manxaData.views.toLocaleString("en-US")}</CardDescription>
                         </div>
                         <div className="flex flex-col">
                             <CardTitle className="font-medium text-sm">Genres:</CardTitle>

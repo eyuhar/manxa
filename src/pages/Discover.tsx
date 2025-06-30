@@ -96,7 +96,7 @@ function Discover(): JSX.Element {
 
       {data?.pages[0]?.data?.results && data?.pages[0]?.data?.results?.length > 0 && (
         <div className='mb-6 text-muted-foreground text-sm'>
-          {data?.pages[0]?.data?.totalResults} results
+          {data?.pages[0]?.data?.totalResults.toLocaleString("en-US")} results
         </div>
       )}      
 
