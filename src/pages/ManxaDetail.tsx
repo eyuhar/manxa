@@ -1,10 +1,11 @@
-import { fetchManxa } from "@/services/api";
+import { fetchManxa, fetchManxaList } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import { buildUrl, extractSlug } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ManxaDetailed } from "@/types";
+import ManxaCard from "@/components/ManxaCard";
 
 
 
@@ -12,9 +13,9 @@ export default function ManxaDetail() {
     const { title } = useParams<{ title: string }>();
 
     const {
-        data,
-        isLoading,
-        isError,
+        data: ManxaDetail,
+        isLoading: isLoadingManxaDetail,
+        isError: isErrorManxaDetail,
     } = useQuery({
         queryKey: ["manxaDetail", title],
         queryFn: () => title ? fetchManxa(buildUrl("https://www.mangakakalot.gg/manga/", title)) : Promise.reject("No title provided"),
@@ -22,7 +23,15 @@ export default function ManxaDetail() {
         retry: false,
     });
 
-    if (isLoading) {
+    const {
+        data: featuredManxas,
+        isLoading: isLoadingFeaturedManxas,
+    } = useQuery({
+        queryKey: ['featuredManxas'],
+        queryFn: () => fetchManxaList(1),
+    });
+
+    if (isLoadingManxaDetail) {
         return (
             <div className="p-4 flex items-center justify-center">
                 <svg
@@ -37,7 +46,7 @@ export default function ManxaDetail() {
         );
     }
 
-    if (isError) {
+    if (isErrorManxaDetail) {
         return (
             <div className="p-4 text-center">
                 <p className="mb-3 text-accent-foreground font-semibold">Manxa not found</p>
@@ -51,11 +60,11 @@ export default function ManxaDetail() {
         );
     }
 
-    if (!data?.data) {
+    if (!ManxaDetail?.data) {
         return <div className="p-4 text-muted-foreground">No manxa data found.</div>;
     }
 
-    const manxa: ManxaDetailed = data.data;
+    const manxa: ManxaDetailed = ManxaDetail.data;
 
     return (
         <div className="max-w-6xl p-4 flex flex-col">
@@ -114,22 +123,52 @@ export default function ManxaDetail() {
                 <CardTitle className="font-medium text-sm mb-2 self-center">Summary</CardTitle>
                 <CardDescription className="wrap-anywhere">{manxa.summary}</CardDescription>
             </div>
-            <div>
-            <Card className="mt-8 max-w-4xl self-center w-full">
-                <CardHeader className="flex flex-col">
-                    <CardTitle className="self-center">
-                        Chapters
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-1 h-[500px] overflow-y-auto scrollbar">
-                    {manxa.chapters.map((chapter, index) => (
-                        <Link to={`/manxa/${extractSlug(chapter.chapterUrl, "https://www.mangakakalot.gg/manga/")}`} key={index} className="flex w-full items-center justify-between hover:bg-accent hover:text-accent-foreground p-2 rounded-md">
-                            <CardTitle className="font-medium text-sm overflow-hidden text-ellipsis whitespace-nowrap flex-1">{chapter.chapter}</CardTitle>
-                            <CardDescription>{chapter.chapterUploadTime}</CardDescription>
-                        </Link>
-                    ))}
-                </CardContent>
-            </Card>
+            <div className="flex [@media(max-width:550px)]:flex-col justify-center items-center gap-2 w-full">
+                <Card className="mt-8 max-w-4xl self-start w-full">
+                    <CardHeader className="flex flex-col">
+                        <CardTitle className="self-center">
+                            Chapters
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-col gap-1 max-h-[886px] [@media(max-width:900px)]:max-h-[742px] overflow-y-auto scrollbar">
+                        {manxa.chapters.map((chapter, index) => (
+                            <Link to={`/manxa/${extractSlug(chapter.chapterUrl, "https://www.mangakakalot.gg/manga/")}`} key={index} className="flex w-full items-center justify-between hover:bg-accent hover:text-accent-foreground p-2 rounded-md">
+                                <CardTitle className="font-medium text-sm overflow-hidden text-ellipsis whitespace-nowrap flex-1">{chapter.chapter}</CardTitle>
+                                <CardDescription>{chapter.chapterUploadTime}</CardDescription>
+                            </Link>
+                        ))}
+                    </CardContent>
+                </Card>
+                <Card className="mt-8 max-w-[250px] [@media(max-width:550px)]:max-w-full w-full">
+                    <CardHeader className="flex flex-col">
+                        <CardTitle className="self-center mb-6">
+                            Trending
+                        </CardTitle>
+                        <CardContent className="flex [@media(min-width:550px)]:flex-col gap-2 self-center">
+                            {isLoadingFeaturedManxas ? (
+                                <div className="p-4 flex items-center justify-center">
+                                    <svg
+                                        className="w-8 animate-spin fill-foreground"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <title>loading</title>
+                                        <path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+                                    </svg>
+                                </div>) : (
+                                    featuredManxas?.data?.results?.length && featuredManxas?.data?.results?.length > 0 ? (
+                                        featuredManxas?.data.results.slice(0, 3).map((manxa, index) => (
+                                            <Link to={`/manxa/${extractSlug(manxa.url, "https://www.mangakakalot.gg/manga/")}`} key={index}>
+                                                <ManxaCard manxa={manxa}/>
+                                            </Link>
+                                        ))
+                                    ) : (
+                                        <div className="p-4 text-muted-foreground">No trending manxas found.</div>
+                                    )
+                                )}
+                        </CardContent>
+                    </CardHeader>
+                </Card>
             </div>
         </div>
     );
