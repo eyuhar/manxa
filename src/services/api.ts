@@ -1,4 +1,4 @@
-import type { ManxaListResponse, ManxaDetailedResponse } from "@/types";
+import type { ManxaListResponse, ManxaDetailedResponse, ChapterImageUrlsReponse } from "@/types";
 
 //fetches a list of manxas from the API
 export async function fetchManxaList(page = 1): Promise<ManxaListResponse> {
@@ -31,4 +31,27 @@ export async function searchManxas(term: string, page = 1): Promise<ManxaListRes
   }
   
   return res.json();
+}
+
+//fetches a list of image URLs for a specific chapter
+export async function fetchChapterImageUrls(chapterUrl: string): Promise<ChapterImageUrlsReponse> {
+  const res = await fetch("http://52.59.130.106/api/chapter.php?chapter=" + encodeURIComponent(chapterUrl));
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch chapter image URLs");
+  }
+
+  return res.json();
+}
+
+// Function to fetch image from the API and cache it as a Blob
+export async function fetchImageAsBlobUrl(imageUrl: string): Promise<string> {
+  const res = await fetch("http://52.59.130.106/api/imageProxy.php?url=" + encodeURIComponent(imageUrl));
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch image");
+  }
+
+  const blob = await res.blob();
+  return URL.createObjectURL(blob);
 }

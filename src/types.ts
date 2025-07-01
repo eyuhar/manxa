@@ -39,3 +39,10 @@ export type ManxaDetailedResponse = {
     success: boolean;
     data: ManxaDetailed;
 }
+
+type ChapterImageUrl = string;
+
+export type ChapterImageUrlsReponse = {
+    success: boolean;
+    data: ChapterImageUrl[];
+}

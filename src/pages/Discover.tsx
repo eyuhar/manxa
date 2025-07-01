@@ -1,10 +1,13 @@
 import ManxaCard from '@/components/ManxaCard';
+import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { fetchManxaList, searchManxas } from '@/services/manxa';
+import { extractSlug } from '@/lib/utils';
+import { fetchManxaList, searchManxas } from '@/services/api';
 import type { Manxa } from '@/types';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState, type JSX } from 'react';
+import { Link } from 'react-router-dom';
 
 function Discover(): JSX.Element {
   // search input for controlled input
@@ -73,7 +76,7 @@ function Discover(): JSX.Element {
   };
 
   return (
-    <div className="p-4 flex flex-col items-center w-full">
+    <div className="flex flex-col items-center w-full">
       <h1 className="text-2xl font-bold mb-4">Discover</h1>
 
       <div className="flex gap-0 w-full justify-center">
@@ -118,7 +121,9 @@ function Discover(): JSX.Element {
       <div className="flex flex-wrap gap-8 max-w-6xl items-center justify-center">
         {data?.pages.map((page, pageIndex) =>
           page.data.results.map((manxa: Manxa) => (
-            <ManxaCard key={manxa.title || `${pageIndex}-${manxa.title}`} manxa={manxa} />
+            <Link to={`/manxa/${extractSlug(manxa.url, "https://www.mangakakalot.gg/manga/")}`} key={`${pageIndex}-${manxa.title}`}>
+              <ManxaCard manxa={manxa} />
+            </Link>
           ))
         )}
       </div>
@@ -138,8 +143,10 @@ function Discover(): JSX.Element {
 
       {!isLoading &&
         data?.pages[0]?.data?.results.length === 0 && (
-          <p className="text-gray-500 mt-8">No manxas found</p>
+          <p className="text-muted-foreground mt-8">No manxas found</p>
         )}
+
+      <ScrollToTopButton className="fixed bottom-5 right-5"/>
     </div>
   );
 }

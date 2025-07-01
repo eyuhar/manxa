@@ -9,6 +9,8 @@ import NotFound from './pages/NotFound'
 import MyManxa from './pages/MyManxa'
 import Profile from './pages/Profile'
 import ProtectedRoute from "./components/ProtectedRoute"
+import ManxaDetail from './pages/ManxaDetail'
+import ChapterReader from './pages/ChapterReader'
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
           <Route path="register" element={<Register />} />
           <Route path="history" element={<ProtectedRoute><History /></ProtectedRoute>} />
           <Route path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path='manxa/:title' element={<ManxaDetail />} />
+          <Route path="/manxa/:title/:chapter" element={<ChapterReader />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

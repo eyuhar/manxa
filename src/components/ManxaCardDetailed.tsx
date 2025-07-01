@@ -1,8 +1,10 @@
-import { fetchManxa } from "@/services/manxa";
+import { fetchManxa } from "@/services/api";
 import type { ManxaDetailed } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import type { JSX } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { useNavigate } from "react-router-dom";
+import { extractSlug } from "@/lib/utils";
 
 type Props = {
     url: string;
@@ -15,6 +17,7 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
         queryKey: ['ManxaCardDetailed', url],
         queryFn: () => fetchManxa(url),
     });
+    const navigate = useNavigate();
 
     //show loading icon if data is still loading
     if (isLoading) {
@@ -32,46 +35,50 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
 
     //show message if fetched data is empty
     if (!data) {
-        return <div className="p-4">Manxa not found.</div>;
+        return <div className="p-4 text-muted-foreground">Manxa not found.</div>;
     }
 
     const manxaData: ManxaDetailed = data.data;
 
+    const handleClick = () => {
+        navigate(`/manxa/${extractSlug(url, "https://www.mangakakalot.gg/manga/")}`);
+    }
+
     return (
         <>
             <div className="[@media(max-width:655px)]:hidden flex h-100 items-center rounded-xl border-gray-200">
-                <img className="rounded-xl h-80" src={"http://52.59.130.106/api/imageProxy.php?url=" + encodeURIComponent(manxaData.img)} alt={manxaData.title} />
+                <img className="rounded-xl h-80 cursor-pointer" src={"http://52.59.130.106/api/imageProxy.php?url=" + encodeURIComponent(manxaData.img)} alt={manxaData.title} onClick={handleClick}/>
                 <Card className="border-0 h-100 shadow-none overflow-scroll overflow-x-hidden scrollbar">
                     <CardHeader>
-                        <CardTitle>{manxaData.title}</CardTitle>
+                        <CardTitle className="cursor-pointer hover:underline" onClick={handleClick}>{manxaData.title}</CardTitle>
                     </CardHeader>
                     <CardContent className="flex flex-col gap-2">
                         <div className="flex flex-col">
-                            <CardTitle className="font-medium text-sm">Author(s):</CardTitle>
+                            <CardTitle className="font-medium text-sm">Author(s)</CardTitle>
                             <CardDescription>{manxaData.authors}</CardDescription>
                         </div>
                         <div className="flex flex-col">
-                            <CardTitle className="font-medium text-sm">Status:</CardTitle>
+                            <CardTitle className="font-medium text-sm">Status</CardTitle>
                             <CardDescription>{manxaData.status}</CardDescription>
                         </div>
                         <div className="flex flex-col">
-                            <CardTitle className="font-medium text-sm">Last Update:</CardTitle>
+                            <CardTitle className="font-medium text-sm">Last Update</CardTitle>
                             <CardDescription>{manxaData.lastUpdate}</CardDescription>
                         </div>
                         <div className="flex flex-col">
-                            <CardTitle className="font-medium text-sm">Views:</CardTitle>
+                            <CardTitle className="font-medium text-sm">Views</CardTitle>
                             <CardDescription>{manxaData.views.toLocaleString("en-US")}</CardDescription>
                         </div>
                         <div className="flex flex-col">
-                            <CardTitle className="font-medium text-sm">Genres:</CardTitle>
+                            <CardTitle className="font-medium text-sm">Genres</CardTitle>
                             <CardDescription>{manxaData.genres.join(", ")}</CardDescription>
                         </div>
                         <div className="flex flex-col">
-                            <CardTitle className="font-medium text-sm">Rating:</CardTitle>
+                            <CardTitle className="font-medium text-sm">Rating</CardTitle>
                             <CardDescription>{manxaData.rating}</CardDescription>
                         </div>
                         <div className="flex flex-col">
-                            <CardTitle className="font-medium text-sm">Summary:</CardTitle>
+                            <CardTitle className="font-medium text-sm">Summary</CardTitle>
                             <CardDescription>{manxaData.summary}</CardDescription>
                         </div>
                     </CardContent>
