@@ -130,7 +130,7 @@ export default function ManxaDetail() {
                             Chapters
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="flex flex-col gap-1 max-h-[886px] [@media(max-width:900px)]:max-h-[742px] overflow-y-auto scrollbar">
+                    <CardContent className="flex flex-col gap-1 max-h-[902px] [@media(max-width:900px)]:max-h-[758px] overflow-y-auto scrollbar">
                         {manxa.chapters.map((chapter, index) => (
                             <Link to={`/manxa/${extractSlug(chapter.chapterUrl, "https://www.mangakakalot.gg/manga/")}`} key={index} className="flex w-full items-center justify-between hover:bg-accent hover:text-accent-foreground p-2 rounded-md">
                                 <CardTitle className="font-medium text-sm overflow-hidden text-ellipsis whitespace-nowrap flex-1">{chapter.chapter}</CardTitle>
@@ -139,12 +139,12 @@ export default function ManxaDetail() {
                         ))}
                     </CardContent>
                 </Card>
-                <Card className="mt-8 max-w-[250px] [@media(max-width:550px)]:max-w-full w-full">
+                <Card className="mt-8 max-w-[250px] [@media(max-width:550px)]:max-w-full w-full border-0 shadow-none">
                     <CardHeader className="flex flex-col">
                         <CardTitle className="self-center mb-6">
                             Trending
                         </CardTitle>
-                        <CardContent className="flex [@media(min-width:550px)]:flex-col gap-2 self-center">
+                        <CardContent className="flex [@media(min-width:550px)]:flex-col self-center">
                             {isLoadingFeaturedManxas ? (
                                 <div className="p-4 flex items-center justify-center">
                                     <svg
@@ -157,11 +157,13 @@ export default function ManxaDetail() {
                                     </svg>
                                 </div>) : (
                                     featuredManxas?.data?.results?.length && featuredManxas?.data?.results?.length > 0 ? (
-                                        featuredManxas?.data.results.slice(0, 3).map((manxa, index) => (
+                                        <div className="flex [@media(min-width:550px)]:flex-col justify-center flex-wrap gap-4">
+                                        {featuredManxas?.data.results.slice(0, 3).map((manxa, index) => (
                                             <Link to={`/manxa/${extractSlug(manxa.url, "https://www.mangakakalot.gg/manga/")}`} key={index}>
                                                 <ManxaCard manxa={manxa}/>
                                             </Link>
-                                        ))
+                                        ))}
+                                        </div>
                                     ) : (
                                         <div className="p-4 text-muted-foreground">No trending manxas found.</div>
                                     )

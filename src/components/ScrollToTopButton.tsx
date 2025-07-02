@@ -26,6 +26,7 @@ function ScrollToTopButton({className}: {className?: string}): JSX.Element {
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
+                className='fill-foreground size-5'
             >
                 <title>arrow-up-bold</title>
                 <path d="M15,20H9V12H4.16L12,4.16L19.84,12H15V20Z" />

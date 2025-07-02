@@ -142,7 +142,7 @@ export default function ChapterReader() {
                 <ChapterImage className={widthClasses[zoomLevel]} key={index} imageUrl={imageUrl} index={index} />
             ))}
 
-            <ScrollToTopButton className="fixed bottom-5 right-5"/>
+            <ScrollToTopButton className="fixed bottom-2 right-2"/>
         </div>
     );
 }

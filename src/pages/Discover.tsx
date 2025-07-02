@@ -1,6 +1,5 @@
 import ManxaCard from '@/components/ManxaCard';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { extractSlug } from '@/lib/utils';
 import { fetchManxaList, searchManxas } from '@/services/api';
@@ -86,15 +85,8 @@ function Discover(): JSX.Element {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="py-2 mb-5 max-w-2xl rounded-r-none focus-visible:ring-0"
+          className="py-2 mb-5 max-w-17 mx-5 focus-visible:ring-0 text-sm focus:max-w-2xl overflow-hidden transition-[max-width] duration-1000 ease-in-out cursor-pointer focus:cursor-text"
         />
-        <Button
-          className="rounded-l-none border-l-0"
-          variant="outline"
-          onClick={handleSearch}
-        >
-          Search
-        </Button>
       </div>
 
       {data?.pages[0]?.data?.results && data?.pages[0]?.data?.results?.length > 0 && (
@@ -146,7 +138,7 @@ function Discover(): JSX.Element {
           <p className="text-muted-foreground mt-8">No manxas found</p>
         )}
 
-      <ScrollToTopButton className="fixed bottom-5 right-5"/>
+      <ScrollToTopButton className="fixed bottom-2 right-2"/>
     </div>
   );
 }

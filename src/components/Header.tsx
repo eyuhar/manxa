@@ -1,5 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from './ui/button';
 import type { JSX } from 'react';
 import {
@@ -10,10 +10,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel
 } from './ui/dropdown-menu';
+import { motion } from 'framer-motion';
 
+const navItems: { name: string, href: string }[] = [
+  { name: 'Home', href: '/' },
+  { name: 'Discover', href: '/discover' },
+  { name: 'MyManxa', href: '/myManxa' },
+  { name: 'History', href: '/history' },
+  { name: 'Profile', href: '/profile' }
+];
 
 function Header(): JSX.Element {
   const { user, isLoading, logout } = useAuth();
+  const location = useLocation();
+  const pathname = location.pathname;
 
   return (
     <header className='w-full px-4 py-2 flex items-center gap-2 justify-between'>
@@ -25,38 +35,47 @@ function Header(): JSX.Element {
             className='w-34 bg-transparent mr-2'
           />
           <nav className='flex gap-1 font-medium'>
-            <Button variant="link" asChild>
-              <Link to="/">
-                Home
-              </Link>
-            </Button>
-            <Button variant="link" asChild>
-              <Link to="discover">
-                Discover
-              </Link>
-            </Button>
-            <Button variant="link" asChild>
-              <Link to="myManxa">
-                MyManxa
-              </Link>
-            </Button>
-            <Button variant="link" asChild>
-              <Link to="history">
-                History
-              </Link>
-            </Button>
-            <Button variant="link" asChild>
-              <Link to="profile">
-                Profile
-              </Link>
-            </Button>
+            {navItems.map((item) => {
+              const isActive = pathname === item.href
+
+              return (
+                <div key={item.href} className="relative">
+                  <Button asChild variant="ghost" className="px-3 py-1 text-sm font-medium">
+                    <Link to={item.href} className="relative">
+                      {item.name}
+                      {isActive && (
+                        <motion.div
+                          layoutId="underline-container"
+                          className="absolute left-2 right-2 -bottom-1 h-[2px]"
+                          
+                          transition={{
+                            ease: 'easeInOut',
+                            stiffness: 300,
+                            damping: 30,
+                            duration: 0.6,
+                          }}
+                        >
+                          <motion.div
+                            key={item.href}
+                            initial={{ scaleX: 0.1 , transition: { duration: 0.6 }}}
+                            animate={{ scaleX: 1 , transition: { duration: 0.4, delay: 0.5 }}} 
+                            className="w-full h-full bg-foreground"
+                            transition={{ ease: "easeInOut" }}
+                          />
+                        </motion.div>
+                      )}
+                    </Link>
+                  </Button>
+                </div>
+              )
+            })}
           </nav>
         </div>
         <div>
           {isLoading ? (
             <span>
               <div className="p-4 flex items-center justify-center">
-                    <svg className="w-8 animate-spin fill-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>loading</title><path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" /></svg>
+                <svg className="w-8 animate-spin fill-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>loading</title><path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" /></svg>
               </div>;
             </span>
           ) : user ? (
@@ -106,21 +125,41 @@ function Header(): JSX.Element {
                 <DropdownMenuSeparator />
               </>
             )}
-            <DropdownMenuItem>
-              <Link to="/" className='w-full font-medium text-sm'>Home</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link to="discover" className='w-full font-medium text-sm'>Discover</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link to="myManxa" className='w-full font-medium text-sm'>MyManxa</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link to="history" className='w-full font-medium text-sm'>History</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link to="profile" className='w-full font-medium text-sm'>Profile</Link>
-            </DropdownMenuItem>
+            
+            {navItems.map((item) => {
+              const isActive = pathname === item.href
+
+              return (
+                <DropdownMenuItem key={item.href} className="relative w-full">
+                    <Link to={item.href} className="w-full relative font-medium text-sm">
+                      <div className='inline-block relative'>
+                      {item.name}
+                      {isActive && (
+                        <motion.div
+                          className="absolute left-0 right-0 -bottom-1 h-[2px] "
+                          
+                          transition={{
+                            ease: 'easeInOut',
+                            stiffness: 300,
+                            damping: 30,
+                            duration: 0.6,
+                          }}
+                        >
+                          <motion.div
+                            key={item.href}
+                            initial={{ scaleX: 0.1 , transition: { duration: 0.6 }}}
+                            animate={{ scaleX: 1 , transition: { duration: 0.4, delay: 0.1 }}} 
+                            className="h-full bg-foreground origin-left"
+                            transition={{ ease: "easeInOut" }}
+                          />
+                        </motion.div>
+                      )}
+                      </div>
+                    </Link>
+                </DropdownMenuItem>
+              )
+            })}
+
             {user ? (
               <>
                 <DropdownMenuSeparator />
@@ -128,7 +167,7 @@ function Header(): JSX.Element {
                   <Link to="/" className='w-full font-medium text-sm'>Logout</Link>
                 </DropdownMenuItem>
               </>
-            ): <></>}
+            ) : <></>}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
