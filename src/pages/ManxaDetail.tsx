@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ManxaDetailed } from "@/types";
 import ManxaCard from "@/components/ManxaCard";
+import StarRating from "@/components/StarRating";
 
 
 
@@ -68,9 +69,11 @@ export default function ManxaDetail() {
 
     return (
         <div className="max-w-6xl p-4 flex flex-col">
-            <div className="[@media(max-width:655px)]:flex-col flex items-center rounded-xl border-gray-200 self-center">
-                <img className="rounded-md" src={"http://52.59.130.106/api/imageProxy.php?url=" + encodeURIComponent(manxa.img)} alt={manxa.title} />
-                <Card className="border-0 shadow-none">
+            <div className="[@media(max-width:655px)]:flex-col flex items-center rounded-xl border-gray-200 self-center w-full">
+                <div className="h-80 overflow-hidden flex shrink-0 justify-center items-center">
+                    <img className="rounded-md h-full object-cover" src={"http://52.59.130.106/api/imageProxy.php?url=" + encodeURIComponent(manxa.img)} alt={manxa.title} />
+                </div>
+                <Card className="border-0 shadow-none min-w-80 w-full">
                     <CardHeader className="flex flex-col">
                         <CardTitle className="[@media(max-width:655px)]:self-center">{manxa.title}</CardTitle>
                     </CardHeader>
@@ -98,13 +101,18 @@ export default function ManxaDetail() {
                         <div className="flex [@media(max-width:655px)]:flex-col justify-between">
                             <div className="flex flex-col">
                                 <CardTitle className="font-medium text-sm [@media(max-width:655px)]:self-center">Rating</CardTitle>
-                                <CardDescription className="[@media(max-width:655px)]:self-center">{manxa.rating}</CardDescription>
+                                <CardDescription className="[@media(max-width:655px)]:self-center">
+                                    <div className="flex items-center gap-2">
+                                        <div>{manxa.rating}</div>
+                                        <StarRating rating={parseFloat(manxa.rating.split("/")[0])} />
+                                    </div>    
+                                </CardDescription>
                             </div>
                             <div className="[@media(min-width:655px)]:hidden flex flex-col">
                                 <CardTitle className="font-medium text-sm self-center">Summary</CardTitle>
                                 <CardDescription className="wrap-anywhere">{manxa.summary}</CardDescription>
                             </div>
-                            <Button variant="outline" className="self-end [@media(max-width:655px)]:w-full [@media(max-width:655px)]:self-center [@media(max-width:655px)]:mt-3">
+                            <Button variant="outline" className="self-end ml-5 [@media(max-width:655px)]:w-full [@media(max-width:655px)]:self-center [@media(max-width:655px)]:mt-3">
                                 <svg
                                     className="w-5 fill-foreground"
                                     xmlns="http://www.w3.org/2000/svg"
@@ -124,7 +132,7 @@ export default function ManxaDetail() {
                 <CardDescription className="wrap-anywhere">{manxa.summary}</CardDescription>
             </div>
             <div className="flex [@media(max-width:550px)]:flex-col justify-center items-center gap-2 w-full">
-                <Card className="mt-8 max-w-4xl self-start w-full">
+                <Card className="mt-8 max-w-3xl self-start w-full">
                     <CardHeader className="flex flex-col">
                         <CardTitle className="self-center">
                             Chapters
@@ -139,7 +147,7 @@ export default function ManxaDetail() {
                         ))}
                     </CardContent>
                 </Card>
-                <Card className="mt-8 max-w-[250px] [@media(max-width:550px)]:max-w-full w-full border-0 shadow-none">
+                <Card className="mt-8 max-w-[220px] [@media(max-width:550px)]:max-w-full w-full border-0 shadow-none">
                     <CardHeader className="flex flex-col">
                         <CardTitle className="self-center mb-6">
                             Trending

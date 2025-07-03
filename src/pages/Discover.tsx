@@ -80,6 +80,7 @@ function Discover(): JSX.Element {
 
       <div className="flex gap-0 w-full justify-center">
         <Input
+          name="search"
           type="text"
           placeholder="Search ..."
           value={searchTerm}

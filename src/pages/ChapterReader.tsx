@@ -24,7 +24,7 @@ const widthClasses: Record<ZoomLevel, string> = {
 
 export default function ChapterReader() {
     const { title, chapter } = useParams<{ title: string; chapter: string }>();
-    const [zoomLevel, setZoomLevel] = useState<ZoomLevel>(3); // Default zoom level
+    const [zoomLevel, setZoomLevel] = useState<ZoomLevel>(5); // Default zoom level
 
     const chapterUrl = `https://www.mangakakalot.gg/manga/${title}/${chapter}`;
 
