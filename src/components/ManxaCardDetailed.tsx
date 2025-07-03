@@ -5,6 +5,7 @@ import type { JSX } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { useNavigate } from "react-router-dom";
 import { extractSlug } from "@/lib/utils";
+import StarRating from "./StarRating";
 
 type Props = {
     url: string;
@@ -47,7 +48,7 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
     return (
         <>
             <div className="[@media(max-width:655px)]:hidden flex h-100 items-center rounded-xl border-gray-200">
-                <img className="rounded-xl h-80 cursor-pointer" src={"http://52.59.130.106/api/imageProxy.php?url=" + encodeURIComponent(manxaData.img)} alt={manxaData.title} onClick={handleClick}/>
+                <img className="rounded-xl h-80 cursor-pointer" src={"http://52.59.130.106/api/imageProxy.php?url=" + encodeURIComponent(manxaData.img)} alt={manxaData.title} onClick={handleClick} />
                 <Card className="border-0 h-100 shadow-none overflow-scroll overflow-x-hidden scrollbar">
                     <CardHeader>
                         <CardTitle className="cursor-pointer hover:underline" onClick={handleClick}>{manxaData.title}</CardTitle>
@@ -75,7 +76,12 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
                         </div>
                         <div className="flex flex-col">
                             <CardTitle className="font-medium text-sm">Rating</CardTitle>
-                            <CardDescription>{manxaData.rating}</CardDescription>
+                            <CardDescription>
+                                <div className="flex items-center gap-1">
+                                    <div>{manxaData.rating}</div>
+                                    <StarRating rating={parseFloat(manxaData.rating.split("/")[0])} />
+                                </div>
+                            </CardDescription>
                         </div>
                         <div className="flex flex-col">
                             <CardTitle className="font-medium text-sm">Summary</CardTitle>

@@ -102,9 +102,9 @@ export default function ManxaDetail() {
                             <div className="flex flex-col">
                                 <CardTitle className="font-medium text-sm [@media(max-width:655px)]:self-center">Rating</CardTitle>
                                 <CardDescription className="[@media(max-width:655px)]:self-center">
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-1">
                                         <div>{manxa.rating}</div>
-                                        <StarRating rating={parseFloat(manxa.rating.split("/")[0])} />
+                                        <StarRating rating={parseFloat(manxa.rating.split("/")[0])}/>
                                     </div>    
                                 </CardDescription>
                             </div>
