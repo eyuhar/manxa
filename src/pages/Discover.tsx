@@ -1,5 +1,6 @@
 import ManxaCard from '@/components/ManxaCard';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { extractSlug } from '@/lib/utils';
 import { fetchManxaList, searchManxas } from '@/services/api';
@@ -77,21 +78,25 @@ function Discover(): JSX.Element {
   return (
     <div className="flex flex-col items-center w-full">
 
-      <div className="flex gap-0 w-full justify-center">
+      <div className="flex gap-2 w-full justify-center">
+        <Button variant="outline" className='ml-3 cursor-pointer' onClick={() => setQuery("")}>
+          Show all
+        </Button>
         <Input
           name="search"
           type="text"
+          autoComplete='off'
           placeholder="Search ..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="py-2 mb-5 max-w-17 mx-5 focus-visible:ring-0 text-sm focus:max-w-2xl overflow-hidden transition-[max-width] duration-1000 ease-in-out cursor-pointer focus:cursor-text"
+          className="py-2 mb-5 max-w-17 mr-3 focus-visible:ring-0 text-sm focus:max-w-2xl overflow-hidden transition-[max-width] duration-1000 ease-in-out cursor-pointer focus:cursor-text"
         />
       </div>
 
       {data?.pages[0]?.data?.results && data?.pages[0]?.data?.results?.length > 0 && (
-        <div className='mb-6 text-muted-foreground text-sm'>
-          {data?.pages[0]?.data?.totalResults.toLocaleString("en-US")} results
+        <div className='mb-6 text-muted-foreground text-sm mx-5'>
+          {data?.pages[0]?.data?.totalResults.toLocaleString("en-US")} results {query !== "" && `for "${query}"`}
         </div>
       )}      
 
