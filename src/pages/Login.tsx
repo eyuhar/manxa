@@ -1,5 +1,5 @@
 import { useState, type JSX } from "react";
-import { login as authLogin, saveToken, type LoginResponse } from "../services/auth";
+import { login as authLogin, type LoginResponse } from "../services/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 function Login(): JSX.Element {
   // local state for input fields
@@ -27,12 +28,9 @@ function Login(): JSX.Element {
     mutationFn: (): Promise<LoginResponse> => authLogin(email, password),
     onSuccess: (data: LoginResponse) => {
       // save token and redirect on success
-      saveToken(data.token);
       login(data.token);
+      toast.success("Login successful.");
       navigate("/");
-    },
-    onError: () => {
-      alert("Login failed. Please check your credentials.");
     },
   });
 
@@ -46,9 +44,9 @@ function Login(): JSX.Element {
     <div className="flex items-center justify-center w-full mt-[10%]">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
+          <CardTitle>Log in to your account</CardTitle>
           <CardDescription>
-            Enter your email and password below to login to your account
+            Enter your email and password below to log in to your account
             {mutation.isError && (
               <p className="text-red-500 mt-2">Login failed. Try again.</p>
             )}
@@ -85,10 +83,15 @@ function Login(): JSX.Element {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required />
+                  required
+                />
               </div>
               <div className="flex flex-col gap-3">
-                <Button type="submit" disabled={mutation.isPending} className="w-full">
+                <Button
+                  type="submit"
+                  disabled={mutation.isPending}
+                  className="w-full"
+                >
                   {mutation.isPending ? "Logging in..." : "Login"}
                 </Button>
               </div>

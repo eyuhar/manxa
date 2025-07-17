@@ -3,21 +3,28 @@ import type { JSX } from "react";
 import { Card, CardTitle } from "./ui/card";
 
 type Props = {
-    manxa: Manxa;
+  manxa: Manxa;
 };
 
 // simple card UI to display manxa cover and title
 export default function ManxaCard({ manxa }: Props): JSX.Element {
-
-
-    return (
-        <Card className="w-44 max-h-72 pt-0 pb-3 border-0 hover:animate-pulse gap-3 rounded-md [@media(max-width:900px)]:w-36 [@media(max-width:900px)]:max-h-60">
-            <div className="h-72 overflow-hidden rounded-t-md">
-                <img className="rounded-t-md h-full w-full object-cover hover:scale-110 transition-all ease-in-out" src={"http://52.59.130.106/api/imageProxy.php?url=" + encodeURIComponent(manxa.img)} alt="" />
-            </div>
-            <CardTitle className="font-normal text-sm pl-1 mb-0 pb-0 h-5 ">
-                <p className="max-w-40 text-xs font-medium overflow-hidden text-ellipsis whitespace-nowrap">{manxa.title}</p>
-            </CardTitle>
-        </Card>
-    );
+  return (
+    <Card className="w-44 max-h-72 pt-0 pb-3 border-0 hover:animate-pulse gap-3 rounded-md [@media(max-width:900px)]:w-36 [@media(max-width:900px)]:max-h-60">
+      <div className="h-72 overflow-hidden rounded-t-md">
+        <img
+          className="rounded-t-md h-full w-full object-cover hover:scale-110 transition-all ease-in-out"
+          src={
+            "http://52.59.130.106/api/image-proxy?url=" +
+            encodeURIComponent(manxa.img)
+          }
+          alt=""
+        />
+      </div>
+      <CardTitle className="font-normal text-sm pl-1 mb-0 pb-0 h-5 ">
+        <p className="max-w-40 text-xs font-medium overflow-hidden text-ellipsis whitespace-nowrap">
+          {manxa.title}
+        </p>
+      </CardTitle>
+    </Card>
+  );
 }

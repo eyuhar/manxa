@@ -1,57 +1,185 @@
-import type { ManxaListResponse, ManxaDetailedResponse, ChapterImageUrlsReponse } from "@/types";
+import type {
+  ManxaListResponse,
+  ManxaDetailedResponse,
+  ChapterImageUrlsReponse,
+  AddListResponse,
+  FetchListsResponse,
+  AddFavoriteResponse,
+} from "@/types";
 
 //fetches a list of manxas from the API
 export async function fetchManxaList(page = 1): Promise<ManxaListResponse> {
-  const res = await fetch("http://52.59.130.106/api/manxaList.php?page=" + encodeURIComponent(page));
-  
-  if (!res.ok) {
-    throw new Error("Failed to fetch featured manxas");
+  try {
+    const res = await fetch(
+      "http://52.59.130.106/api/manxas?page=" + encodeURIComponent(page)
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch featured manxas");
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("fetchManxaList Error", error);
+    throw error;
   }
-  
-  return res.json();
 }
 
 //fetches detailed information about a specific manxa from the API
 export async function fetchManxa(url: string): Promise<ManxaDetailedResponse> {
-  const res = await fetch("http://52.59.130.106/api/manxa.php?manxa_url=" + encodeURIComponent(url));
-  
-  if (!res.ok) {
-    throw new Error("Failed to fetch manxa data");
+  try {
+    const res = await fetch(
+      "http://52.59.130.106/api/manxa?manxa_url=" + encodeURIComponent(url)
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch manxa data");
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("fetchManxa Error", error);
+    throw error;
   }
-  
-  return res.json();
 }
 
 //fetches a list of manxas that match the search term
-export async function searchManxas(term: string, page = 1): Promise<ManxaListResponse> {
-  const res = await fetch("http://52.59.130.106/api/search.php?query=" + encodeURIComponent(term) + "&page=" + encodeURIComponent(page));
-  
-  if (!res.ok) {
-    throw new Error("Failed to search manxas");
+export async function searchManxas(
+  term: string,
+  page = 1
+): Promise<ManxaListResponse> {
+  try {
+    const res = await fetch(
+      "http://52.59.130.106/api/manxas?query=" +
+        encodeURIComponent(term) +
+        "&page=" +
+        encodeURIComponent(page)
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to search manxas");
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("searchManxas Error", error);
+    throw error;
   }
-  
-  return res.json();
 }
 
 //fetches a list of image URLs for a specific chapter
-export async function fetchChapterImageUrls(chapterUrl: string): Promise<ChapterImageUrlsReponse> {
-  const res = await fetch("http://52.59.130.106/api/chapter.php?chapter=" + encodeURIComponent(chapterUrl));
+export async function fetchChapterImageUrls(
+  chapterUrl: string
+): Promise<ChapterImageUrlsReponse> {
+  try {
+    const res = await fetch(
+      "http://52.59.130.106/api/chapter?chapter=" +
+        encodeURIComponent(chapterUrl)
+    );
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch chapter image URLs");
+    if (!res.ok) {
+      throw new Error("Failed to fetch chapter image URLs");
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("fetchChapterImageUrls Error", error);
+    throw error;
   }
-
-  return res.json();
 }
 
 // Function to fetch image from the API and cache it as a Blob
 export async function fetchImageAsBlobUrl(imageUrl: string): Promise<string> {
-  const res = await fetch("http://52.59.130.106/api/imageProxy.php?url=" + encodeURIComponent(imageUrl));
+  try {
+    const res = await fetch(
+      "http://52.59.130.106/api/image-proxy?url=" + encodeURIComponent(imageUrl)
+    );
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch image");
+    if (!res.ok) {
+      throw new Error("Failed to fetch image");
+    }
+
+    const blob = await res.blob();
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    console.error("fetchImageAsBlobUrl Error", error);
+    throw error;
   }
+}
 
-  const blob = await res.blob();
-  return URL.createObjectURL(blob);
+// create a custom favorites list
+export async function addList(
+  token: string,
+  name: string
+): Promise<AddListResponse> {
+  try {
+    const response = await fetch("http://52.59.130.106/api/lists", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("POST request failed:", error);
+    throw error;
+  }
+}
+
+// get all user-defined lists
+export async function fetchLists(token: string): Promise<FetchListsResponse> {
+  try {
+    const response = await fetch("http://52.59.130.106/api/lists", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch user lists.");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("getLists Error", error);
+    throw error;
+  }
+}
+
+// add a manxa to one or multiple lists
+export async function addFavorite(
+  token: string,
+  favorites: { title: string; manxa_url: string; list_name: string }[]
+): Promise<AddFavoriteResponse> {
+  try {
+    const response = await fetch("http://52.59.130.106/api/favorites", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(favorites),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("addFavorite Error", error);
+    throw error;
+  }
 }

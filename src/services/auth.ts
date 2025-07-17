@@ -1,76 +1,98 @@
 export type RegisterResponse = {
   success: boolean;
   message: string;
-}
+};
 
 export type LoginResponse = {
   success: boolean;
   message: string;
   token: string;
-}
+};
 
 export type ApiResponse<T> = {
   success: boolean;
   data: T;
-}
+};
 
 export type ProfileResponse = {
   id: number;
   email: string;
   user_name: string;
   created_at: string;
-}
+};
 
-export async function register(email: string, password: string, username: string): Promise<RegisterResponse> {
-  const res = await fetch("http://52.59.130.106/api/register.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password, user_name: username }),
-  });
+export async function register(
+  email: string,
+  password: string,
+  username: string
+): Promise<RegisterResponse> {
+  try {
+    const res = await fetch("http://52.59.130.106/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password, user_name: username }),
+    });
 
-  if (!res.ok) {
-    throw new Error("Registration failed");
+    if (!res.ok) {
+      throw new Error("Registration failed");
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("register Error", error);
+    throw error;
   }
-
-  return res.json();
 }
 
 // sends credentials and returns token from backend
-export async function login(email: string, password: string): Promise<LoginResponse> {
-  const res = await fetch("http://52.59.130.106/api/login.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
+export async function login(
+  email: string,
+  password: string
+): Promise<LoginResponse> {
+  try {
+    const res = await fetch("http://52.59.130.106/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-  if (!res.ok) {
-    throw new Error("Login failed");
+    if (!res.ok) {
+      throw new Error("Login failed");
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("login Error", error);
+    throw error;
   }
-
-  return res.json();
 }
 
-export async function fetchProfile(token: string): Promise<ProfileResponse>{
-  const res = await fetch("http://52.59.130.106/api/getProfile.php", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export async function fetchProfile(token: string): Promise<ProfileResponse> {
+  try {
+    const res = await fetch("http://52.59.130.106/api/profile", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  if (res.status === 401){
-    //invalid token
-    throw new Error("Unauthorized: Invalid token");
+    if (res.status === 401) {
+      //invalid token
+      throw new Error("Unauthorized: Invalid token");
+    }
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch profile");
+    }
+
+    const json: ApiResponse<ProfileResponse> = await res.json();
+
+    return json.data;
+  } catch (error) {
+    console.error("fetchProfile Error", error);
+    throw error;
   }
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch profile");
-  }
-  
-  const json: ApiResponse<ProfileResponse> = await res.json();
-
-  return json.data;
 }
 
 export function saveToken(token: string): void {

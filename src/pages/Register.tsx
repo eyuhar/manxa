@@ -1,13 +1,19 @@
-import type { RegisterResponse } from '@/services/auth';
-import { useMutation } from '@tanstack/react-query';
-import { register } from '@/services/auth';
-import { useState, type JSX } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-
+import type { RegisterResponse } from "@/services/auth";
+import { useMutation } from "@tanstack/react-query";
+import { register } from "@/services/auth";
+import { useState, type JSX } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 function Register(): JSX.Element {
   //local state for input fields
@@ -21,13 +27,14 @@ function Register(): JSX.Element {
 
   // useMutation handles the registration call
   const mutation = useMutation({
-    mutationFn: (): Promise<RegisterResponse> => register(email, password, username),
+    mutationFn: (): Promise<RegisterResponse> =>
+      register(email, password, username),
     onSuccess: (data: RegisterResponse) => {
       if (!data.success) {
         setMessage(data.message || "Registration failed");
         console.error("Registration error:", data.message);
-      }else if (data.success) {
-        alert("Registration successful! You can now log in.");
+      } else if (data.success) {
+        toast.success("Registration successful! You can now log in.");
         navigate("/login");
       }
     },
@@ -36,7 +43,7 @@ function Register(): JSX.Element {
       console.error("Registration error:", error);
     },
   });
-  
+
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     setMessage(""); // reset message on new submission
@@ -53,7 +60,8 @@ function Register(): JSX.Element {
         <CardHeader>
           <CardTitle>Register a new account</CardTitle>
           <CardDescription>
-            Enter a username, your email and password below to register a new account
+            Enter a username, your email and password below to register a new
+            account
             {message && (
               <p className="text-red-500 mt-2">{message}. Try again.</p>
             )}
@@ -67,7 +75,7 @@ function Register(): JSX.Element {
                 <Input
                   id="username"
                   type="text"
-                  autoComplete='username'
+                  autoComplete="username"
                   placeholder="Username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -79,7 +87,7 @@ function Register(): JSX.Element {
                 <Input
                   id="email"
                   type="email"
-                  autoComplete='email'
+                  autoComplete="email"
                   placeholder="m@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -94,7 +102,8 @@ function Register(): JSX.Element {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required />
+                  required
+                />
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
@@ -104,10 +113,15 @@ function Register(): JSX.Element {
                   placeholder="••••••••"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  required />
+                  required
+                />
               </div>
               <div className="flex flex-col gap-3">
-                <Button type="submit" disabled={mutation.isPending} className="w-full">
+                <Button
+                  type="submit"
+                  disabled={mutation.isPending}
+                  className="w-full"
+                >
                   {mutation.isPending ? "Registering..." : "Register"}
                 </Button>
               </div>
