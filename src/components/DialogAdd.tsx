@@ -1,5 +1,5 @@
 import { useAuth } from "@/contexts/AuthContext";
-import { useState, type JSX } from "react";
+import { useEffect, useState, type JSX } from "react";
 import {
   Dialog,
   DialogClose,
@@ -19,7 +19,13 @@ import {
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Link } from "react-router-dom";
-import { addFavorite, addList, fetchLists } from "@/services/api";
+import {
+  addFavorite,
+  addList,
+  fetchFavorites,
+  fetchLists,
+  removeFavorite,
+} from "@/services/api";
 import { Checkbox } from "./ui/checkbox";
 import type { AddFavoriteResponse, AddListResponse } from "@/types";
 import { toast } from "sonner";
@@ -36,6 +42,7 @@ export default function DialogAdd({
   const [password, setPassword] = useState<string>("");
   const [selectedLists, setSelectedLists] = useState<string[]>([]);
   const [newList, setNewList] = useState<string>("");
+  const [initialLists, setInitialLists] = useState<string[]>([]);
 
   const { user, login } = useAuth();
   const queryClient = useQueryClient();
@@ -75,6 +82,32 @@ export default function DialogAdd({
     queryFn: () => fetchLists(token!),
     enabled: !!token,
   });
+
+  // look up if manxa is already in some favorite list/s
+  // set states(selectedLists, initialLists) accordingly
+  useEffect(() => {
+    if (!token || !userLists?.lists) return;
+
+    const fetchInitialFavorites = async () => {
+      const listsContainingManxa: string[] = [];
+
+      await Promise.all(
+        userLists.lists.map(async (list: { name: string }) => {
+          const res = await fetchFavorites(token, list.name);
+          // ruft /api/favorites/get.php?list_name=list.name
+          const isInList = res.favorites.some((fav) => fav.title === title);
+          if (isInList) {
+            listsContainingManxa.push(list.name);
+          }
+        })
+      );
+
+      setSelectedLists(listsContainingManxa);
+      setInitialLists(listsContainingManxa);
+    };
+
+    fetchInitialFavorites();
+  }, [userLists, title]);
 
   // addListMutation handles adding of a new List
   const addListMutation = useMutation({
@@ -119,19 +152,47 @@ export default function DialogAdd({
     },
   });
 
-  const handleAddToFavorites = () => {
-    if (selectedLists.length === 0) {
-      toast.error("Please select at least one list.");
+  // removeFavoriteMutation handles removing a manxa from a list
+  const removeFavoriteMutation = useMutation({
+    mutationFn: (favorites: { manxa_url: string; list_name: string }[]) =>
+      removeFavorite(token!, favorites),
+    onSuccess: () => {
+      toast.success("Manxa successfully removed.");
+    },
+    onError: () => {
+      toast.error("Failed to remove manxa.");
+    },
+  });
+
+  const handleSaveChanges = () => {
+    const toAdd = selectedLists.filter((l) => !initialLists.includes(l));
+    const toRemove = initialLists.filter((l) => !selectedLists.includes(l));
+
+    if (toAdd.length === 0 && toRemove.length === 0) {
+      toast.info("No changes.");
       return;
     }
 
-    const payload = selectedLists.map((list_name) => ({
-      title,
-      manxa_url: buildUrl("https://www.mangakakalot.gg/manga/", title),
-      list_name,
-    }));
+    // Add manxa to list/s
+    if (toAdd.length > 0) {
+      const payload = toAdd.map((list_name) => ({
+        title,
+        manxa_url: buildUrl("https://www.mangakakalot.gg/manga/", title),
+        list_name,
+      }));
+      addFavoriteMutation.mutate(payload);
+    }
 
-    addFavoriteMutation.mutate(payload);
+    // Remove manxa from list/s
+    if (toRemove.length > 0) {
+      const payload = toRemove.map((list_name) => ({
+        manxa_url: buildUrl("https://www.mangakakalot.gg/manga/", title),
+        list_name,
+      }));
+      removeFavoriteMutation.mutate(payload);
+    }
+
+    setInitialLists(selectedLists);
   };
 
   return user ? (
@@ -146,14 +207,14 @@ export default function DialogAdd({
             <title>bookmark-outline</title>
             <path d="M17,18L12,15.82L7,18V5H17M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,3.89 18.1,3 17,3Z" />
           </svg>
-          <p>Add</p>
+          <p>Bookmark</p>
         </Button>
       </DialogTrigger>
       <DialogContent className="w-sm">
         <DialogHeader>
-          <DialogTitle>Add to List</DialogTitle>
+          <DialogTitle>Manage Lists</DialogTitle>
           <DialogDescription>
-            Add to an existing list or create a new one.
+            Manage the lists this manxa belongs to, or create a new one.
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-5">
@@ -172,6 +233,7 @@ export default function DialogAdd({
             userLists?.lists.map((list, i) => (
               <div key={i} className="flex items-center gap-3">
                 <Checkbox
+                  id={list.name}
                   value={list.name}
                   checked={selectedLists.includes(list.name)}
                   onCheckedChange={(checked) =>
@@ -192,6 +254,9 @@ export default function DialogAdd({
             </DialogTrigger>
             <DialogContent className="w-[364px]">
               <DialogTitle>New List</DialogTitle>
+              <DialogDescription>
+                Choose a name and create a new List.
+              </DialogDescription>
               <div className="flex gap-2">
                 <Input
                   className=""
@@ -216,8 +281,8 @@ export default function DialogAdd({
             </DialogContent>
           </Dialog>
           <DialogClose asChild>
-            <Button variant="outline" size="sm" onClick={handleAddToFavorites}>
-              Add to List(s)
+            <Button variant="outline" size="sm" onClick={handleSaveChanges}>
+              Save Changes
             </Button>
           </DialogClose>
         </div>

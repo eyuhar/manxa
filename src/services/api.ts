@@ -1,10 +1,12 @@
 import type {
   ManxaListResponse,
   ManxaDetailedResponse,
-  ChapterImageUrlsReponse,
+  ChapterImageUrlsResponse,
   AddListResponse,
   FetchListsResponse,
   AddFavoriteResponse,
+  FetchFavoritesResponse,
+  RemoveFavoriteResponse,
 } from "@/types";
 
 //fetches a list of manxas from the API
@@ -70,7 +72,7 @@ export async function searchManxas(
 //fetches a list of image URLs for a specific chapter
 export async function fetchChapterImageUrls(
   chapterUrl: string
-): Promise<ChapterImageUrlsReponse> {
+): Promise<ChapterImageUrlsResponse> {
   try {
     const res = await fetch(
       "http://52.59.130.106/api/chapter?chapter=" +
@@ -180,6 +182,62 @@ export async function addFavorite(
     return data;
   } catch (error) {
     console.error("addFavorite Error", error);
+    throw error;
+  }
+}
+
+// fetch all favorite manxas from a list
+export async function fetchFavorites(
+  token: string,
+  list: string
+): Promise<FetchFavoritesResponse> {
+  try {
+    const response = await fetch(
+      "http://52.59.130.106/api/favorites?list=" + encodeURIComponent(list),
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("fetchFavorites Error", error);
+    throw error;
+  }
+}
+
+// Removes a manxa from one or multiple lists
+export async function removeFavorite(
+  token: string,
+  favorites: { manxa_url: string; list_name: string }[]
+): Promise<RemoveFavoriteResponse> {
+  try {
+    const response = await fetch("http://52.59.130.106/api/favorites", {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(favorites),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("removeFavorite Error", error);
     throw error;
   }
 }

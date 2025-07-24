@@ -42,7 +42,7 @@ export type ManxaDetailedResponse = {
 
 type ChapterImageUrl = string;
 
-export type ChapterImageUrlsReponse = {
+export type ChapterImageUrlsResponse = {
   success: boolean;
   data: ChapterImageUrl[];
 };
@@ -52,14 +52,14 @@ export type AddListResponse = {
   message: string;
 };
 
-export type list = {
+type List = {
   name: string;
   created_at: string;
 };
 
 export type FetchListsResponse = {
   success: boolean;
-  lists: list[];
+  lists: List[];
 };
 
 export type AddFavoriteResponse = {
@@ -70,6 +70,30 @@ export type AddFavoriteResponse = {
       success: boolean;
       status: number;
       message: string;
+    }
+  ];
+};
+
+type Favorite = {
+  title: string;
+  manxa_url: string;
+  created_at: string;
+};
+
+export type FetchFavoritesResponse = {
+  success: boolean;
+  list: string;
+  favorites: Favorite[];
+};
+
+export type RemoveFavoriteResponse = {
+  results: [
+    {
+      manxa_url: string;
+      list_name: string;
+      success: boolean;
+      status: number;
+      messsage: string;
     }
   ];
 };
