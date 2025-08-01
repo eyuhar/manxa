@@ -17,7 +17,7 @@ export default function ManxaCard({ manxa }: Props): JSX.Element {
             "http://52.59.130.106/api/image-proxy?url=" +
             encodeURIComponent(manxa.img)
           }
-          alt=""
+          alt={manxa.title}
         />
       </div>
       <CardTitle className="font-normal text-sm pl-1 mb-0 pb-0 h-5 ">

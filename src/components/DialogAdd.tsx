@@ -115,6 +115,7 @@ export default function DialogAdd({
     onSuccess: (data: AddListResponse) => {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["userLists"] });
+      setNewList("");
     },
     onError: () => {
       toast.error("Failed to add List.");
@@ -144,7 +145,13 @@ export default function DialogAdd({
     mutationFn: (
       entries: { title: string; manxa_url: string; list_name: string }[]
     ): Promise<AddFavoriteResponse> => addFavorite(token!, entries),
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
+      //On success, invalidate the relevant "favorites" queries for each affected list
+      variables.forEach((fav) => {
+        queryClient.invalidateQueries({
+          queryKey: ["favorites", fav.list_name],
+        });
+      });
       toast.success("Manxa successfully added.");
     },
     onError: () => {
@@ -156,7 +163,14 @@ export default function DialogAdd({
   const removeFavoriteMutation = useMutation({
     mutationFn: (favorites: { manxa_url: string; list_name: string }[]) =>
       removeFavorite(token!, favorites),
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
+      //On success, invalidate the relevant "favorites" queries for each affected list
+      variables.forEach((fav) => {
+        queryClient.invalidateQueries({
+          queryKey: ["favorites", fav.list_name],
+        });
+      });
+
       toast.success("Manxa successfully removed.");
     },
     onError: () => {

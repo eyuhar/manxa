@@ -13,6 +13,7 @@ export default function Home(): JSX.Element {
   const { data, isLoading } = useQuery({
     queryKey: ["featuredManxas"],
     queryFn: () => fetchManxaList(1),
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
 
   //show loading icon if data is still loading

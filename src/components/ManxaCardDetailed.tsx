@@ -21,8 +21,9 @@ type Props = {
 export default function ManxaCardDetailed({ url }: Props): JSX.Element {
   //fetch data of required manxa
   const { data, isLoading } = useQuery({
-    queryKey: ["ManxaCardDetailed", url],
+    queryKey: ["manxaDetail", url],
     queryFn: () => fetchManxa(url),
+    staleTime: 1000 * 60 * 15, // 15 minutes
   });
   const navigate = useNavigate();
 
@@ -57,7 +58,7 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
 
   return (
     <>
-      <div className="[@media(max-width:655px)]:hidden flex h-100 items-center rounded-xl border-gray-200">
+      <div className="[@media(max-width:655px)]:hidden flex h-100 max-w-dvw items-center rounded-xl border-gray-200">
         <img
           className="rounded-xl h-80 cursor-pointer"
           src={
@@ -121,7 +122,7 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
         <img
           className="rounded-xl h-80"
           src={
-            "http://52.59.130.106/api/imageProxy.php?url=" +
+            "http://52.59.130.106/api/image-proxy?url=" +
             encodeURIComponent(manxaData.img)
           }
           alt={manxaData.title}

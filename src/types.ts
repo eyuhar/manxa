@@ -2,7 +2,7 @@ export type Manxa = {
   title: string;
   url: string;
   img: string;
-  newestChapter: string;
+  newestChapter?: string;
   summary?: string;
 };
 

@@ -17,25 +17,30 @@ import DialogAdd from "@/components/DialogAdd";
 
 export default function ManxaDetail() {
   const { title } = useParams<{ title: string }>();
+  const manxaUrl = title
+    ? buildUrl("https://www.mangakakalot.gg/manga/", title)
+    : "";
 
   const {
     data: ManxaDetail,
     isLoading: isLoadingManxaDetail,
     isError: isErrorManxaDetail,
   } = useQuery({
-    queryKey: ["manxaDetail", title],
+    queryKey: ["manxaDetail", manxaUrl],
     queryFn: () =>
       title
         ? fetchManxa(buildUrl("https://www.mangakakalot.gg/manga/", title))
         : Promise.reject("No title provided"),
     enabled: !!title,
     retry: false,
+    staleTime: 1000 * 60 * 15, // 15 minutes
   });
 
   const { data: featuredManxas, isLoading: isLoadingFeaturedManxas } = useQuery(
     {
       queryKey: ["featuredManxas"],
       queryFn: () => fetchManxaList(1),
+      staleTime: 1000 * 60 * 60, // 1 hour
     }
   );
 
