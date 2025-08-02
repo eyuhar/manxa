@@ -17,9 +17,11 @@ import {
   fetchFavorites,
   fetchLists,
   fetchManxa,
+  removeList,
+  renameList,
 } from "@/services/api";
 import { getToken } from "@/services/auth";
-import type { AddListResponse } from "@/types";
+import type { ManageListResponse } from "@/types";
 import {
   useMutation,
   useQueries,
@@ -34,6 +36,7 @@ import { toast } from "sonner";
 function MyManxa(): JSX.Element {
   const [selectedList, setSelectedList] = useState<string>("");
   const [newList, setNewList] = useState<string>("");
+  const [newName, setNewName] = useState<string>("");
   const queryClient = useQueryClient();
   const token = getToken();
 
@@ -81,14 +84,42 @@ function MyManxa(): JSX.Element {
 
   // addListMutation handles adding of a new List
   const addListMutation = useMutation({
-    mutationFn: (): Promise<AddListResponse> => addList(token!, newList),
-    onSuccess: (data: AddListResponse) => {
+    mutationFn: (): Promise<ManageListResponse> => addList(token!, newList),
+    onSuccess: (data: ManageListResponse) => {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["userLists"] });
       setNewList("");
     },
     onError: () => {
       toast.error("Failed to add List.");
+    },
+  });
+
+  // renameListMutation handles renaming of a List
+  const renameListMutation = useMutation({
+    mutationFn: (): Promise<ManageListResponse> =>
+      renameList(token!, { old_name: selectedList, new_name: newName }),
+    onSuccess: (data: ManageListResponse) => {
+      toast.success(data.message);
+      queryClient.invalidateQueries({ queryKey: ["userLists"] });
+      setSelectedList(newName); // update selected list to new name
+      setNewName("");
+    },
+    onError: () => {
+      toast.error("Failed to rename List.");
+    },
+  });
+
+  const deleteListMutation = useMutation({
+    mutationFn: (): Promise<ManageListResponse> =>
+      removeList(token!, selectedList),
+    onSuccess: (data: ManageListResponse) => {
+      toast.success(data.message);
+      setSelectedList("Standard"); // reset selected list after deletion
+      queryClient.invalidateQueries({ queryKey: ["userLists"] });
+    },
+    onError: () => {
+      toast.error("Failed to delete List.");
     },
   });
 
@@ -100,13 +131,33 @@ function MyManxa(): JSX.Element {
     addListMutation.mutate();
   };
 
-  // handles enter key press for add list input
+  const handleRenameList = () => {
+    if (!newName.trim()) {
+      toast.error("List name cannot be empty.");
+      return;
+    }
+    renameListMutation.mutate();
+  };
+
+  const handleDeleteList = () => {
+    if (!selectedList || selectedList === "") {
+      toast.error("No list selected for deletion.");
+      return;
+    }
+    if (selectedList === "Standard") {
+      toast.error("Cannot delete the Standard list.");
+      return;
+    }
+    deleteListMutation.mutate();
+  };
+
+  // handles enter key press for managing list inputs
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      const closeButton = document.querySelector(
-        "#addList"
-      ) as HTMLButtonElement | null;
-      closeButton?.click();
+      const input = e.currentTarget;
+      const container = input.closest("div");
+      const button = container?.querySelector("button");
+      button?.click();
     }
   };
 
@@ -129,7 +180,7 @@ function MyManxa(): JSX.Element {
           onValueChange={setSelectedList}
           className="max-w-6xl w-full items-center"
         >
-          <div className="w-full flex gap-2 mb-2 items-center justify-center">
+          <div className="w-full flex flex-wrap gap-2 mb-2 items-center justify-center">
             <div className="overflow-hidden">
               <ScrollArea className="pb-2" scrollHideDelay={0}>
                 <TabsList className="inset-shadow-[0_2px_2px_var(--ring)] flex ">
@@ -160,7 +211,7 @@ function MyManxa(): JSX.Element {
               </ScrollArea>
             </div>
 
-            <div className="mb-2">
+            <div className="flex gap-2 mb-2">
               <Dialog>
                 <DialogTrigger asChild>
                   <Button variant="outline" size="sm">
@@ -190,6 +241,75 @@ function MyManxa(): JSX.Element {
                         onClick={handleAddList}
                       >
                         Add
+                      </Button>
+                    </DialogClose>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    Rename
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="w-sm">
+                  <DialogTitle>Rename List</DialogTitle>
+                  <DialogDescription>
+                    Choose a new name for your list "{selectedList}".
+                  </DialogDescription>
+                  <div className="flex gap-2">
+                    <Input
+                      className=""
+                      id="newName"
+                      type="text"
+                      placeholder="New Name"
+                      value={newName}
+                      onChange={(e) => setNewName(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      required
+                    />
+                    <DialogClose asChild>
+                      <Button
+                        id="renameList"
+                        variant={"outline"}
+                        onClick={handleRenameList}
+                      >
+                        Rename
+                      </Button>
+                    </DialogClose>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="destructive" size="sm">
+                    Delete
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="w-sm">
+                  <DialogTitle>Delete List</DialogTitle>
+                  <DialogDescription>
+                    You are about to delete the list "{selectedList}".
+                    <br />
+                    All entries it contains will also be deleted. <br />
+                    Do you want to continue? <br /> <br />
+                    <span className="text-xs">
+                      Note: Deleted lists cannot be recovered!
+                    </span>
+                  </DialogDescription>
+                  <div className="flex gap-2 w-full mt-4">
+                    <DialogClose asChild>
+                      <Button
+                        id="deleteList"
+                        variant="destructive"
+                        onClick={handleDeleteList}
+                      >
+                        Yes
+                      </Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                      <Button id="!deleteList" variant={"outline"}>
+                        No
                       </Button>
                     </DialogClose>
                   </div>

@@ -2,7 +2,7 @@ import type {
   ManxaListResponse,
   ManxaDetailedResponse,
   ChapterImageUrlsResponse,
-  AddListResponse,
+  ManageListResponse,
   FetchListsResponse,
   AddFavoriteResponse,
   FetchFavoritesResponse,
@@ -113,7 +113,7 @@ export async function fetchImageAsBlobUrl(imageUrl: string): Promise<string> {
 export async function addList(
   token: string,
   name: string
-): Promise<AddListResponse> {
+): Promise<ManageListResponse> {
   try {
     const response = await fetch("http://52.59.130.106/api/lists", {
       method: "POST",
@@ -131,7 +131,61 @@ export async function addList(
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("POST request failed:", error);
+    console.error("addList Error:", error);
+    throw error;
+  }
+}
+
+// remove a custom favorites list
+export async function removeList(
+  token: string,
+  name: string
+): Promise<ManageListResponse> {
+  try {
+    const response = await fetch("http://52.59.130.106/api/lists", {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("removeList Error:", error);
+    throw error;
+  }
+}
+
+// rename a custom favorites list
+export async function renameList(
+  token: string,
+  payload: { old_name: string; new_name: string }
+): Promise<ManageListResponse> {
+  try {
+    const response = await fetch("http://52.59.130.106/api/lists", {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("renameList Error:", error);
     throw error;
   }
 }

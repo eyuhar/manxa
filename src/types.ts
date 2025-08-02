@@ -47,7 +47,7 @@ export type ChapterImageUrlsResponse = {
   data: ChapterImageUrl[];
 };
 
-export type AddListResponse = {
+export type ManageListResponse = {
   success: boolean;
   message: string;
 };

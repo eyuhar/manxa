@@ -1,6 +1,6 @@
 import { useState, type JSX } from "react";
 import { login as authLogin, type LoginResponse } from "../services/auth";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -21,7 +21,10 @@ function Login(): JSX.Element {
   const [password, setPassword] = useState<string>("");
   const { login } = useAuth();
 
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const from = location.state?.from || "/"; // redirect after login
 
   // useMutation handles the login call
   const mutation = useMutation({
@@ -30,7 +33,7 @@ function Login(): JSX.Element {
       // save token and redirect on success
       login(data.token);
       toast.success("Login successful.");
-      navigate("/");
+      navigate(from, { replace: true });
     },
   });
 

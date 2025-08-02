@@ -3,9 +3,14 @@ import { getToken } from "../services/auth";
 
 interface Props {
   children: React.ReactNode;
+  location?: string;
 }
 
-export default function ProtectedRoute({ children }: Props) {
+export default function ProtectedRoute({ children, location }: Props) {
   const token = getToken();
-  return token ? <>{children}</> : <Navigate to="/login" />;
+  return token ? (
+    <>{children}</>
+  ) : (
+    <Navigate to="/login" state={{ from: location }} replace />
+  );
 }

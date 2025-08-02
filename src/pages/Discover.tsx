@@ -1,13 +1,13 @@
-import ManxaCard from '@/components/ManxaCard';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { extractSlug } from '@/lib/utils';
-import { fetchManxaList, searchManxas } from '@/services/api';
-import type { Manxa } from '@/types';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { useEffect, useRef, useState, type JSX } from 'react';
-import { Link } from 'react-router-dom';
+import ManxaCard from "@/components/ManxaCard";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { extractSlug } from "@/lib/utils";
+import { fetchManxaList, searchManxas } from "@/services/api";
+import type { Manxa } from "@/types";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useEffect, useRef, useState, type JSX } from "react";
+import { Link } from "react-router-dom";
 
 function Discover(): JSX.Element {
   // search input for controlled input
@@ -29,39 +29,43 @@ function Discover(): JSX.Element {
     queryFn: ({ pageParam = 1 }) =>
       isSearching ? searchManxas(query, pageParam) : fetchManxaList(pageParam),
     getNextPageParam: (lastPage, allPages) => {
-      if(isSearching){
-        return lastPage?.data?.results?.length === 20 ? allPages.length + 1 : undefined;
-      }else{
-        return lastPage?.data?.results?.length === 24 ? allPages.length + 1 : undefined;
+      if (isSearching) {
+        return lastPage?.data?.results?.length === 20
+          ? allPages.length + 1
+          : undefined;
+      } else {
+        return lastPage?.data?.results?.length === 24
+          ? allPages.length + 1
+          : undefined;
       }
     },
     staleTime: 1000 * 60 * 10,
-    initialPageParam: 1
-  })
+    initialPageParam: 1,
+  });
 
   // Trigger element for IntersectionObserver
-  const loadMoreRef = useRef<HTMLDivElement | null>(null)
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage()
+          fetchNextPage();
         }
       },
       { threshold: 1 }
-    )
+    );
 
     if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current)
+      observer.observe(loadMoreRef.current);
     }
 
     return () => {
       if (loadMoreRef.current) {
-        observer.unobserve(loadMoreRef.current)
+        observer.unobserve(loadMoreRef.current);
       }
-    }
-  }, [loadMoreRef, hasNextPage, fetchNextPage, isFetchingNextPage])
+    };
+  }, [loadMoreRef, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   // handles search button click
   const handleSearch = () => {
@@ -77,15 +81,18 @@ function Discover(): JSX.Element {
 
   return (
     <div className="flex flex-col items-center w-full">
-
       <div className="flex gap-2 w-full justify-center">
-        <Button variant="outline" className='ml-3 cursor-pointer' onClick={() => setQuery("")}>
+        <Button
+          variant="outline"
+          className="ml-3 cursor-pointer"
+          onClick={() => setQuery("")}
+        >
           Show all
         </Button>
         <Input
           name="search"
           type="text"
-          autoComplete='off'
+          autoComplete="off"
           placeholder="Search ..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -94,11 +101,13 @@ function Discover(): JSX.Element {
         />
       </div>
 
-      {data?.pages[0]?.data?.results && data?.pages[0]?.data?.results?.length > 0 && (
-        <div className='mb-6 text-muted-foreground text-sm mx-5'>
-          {data?.pages[0]?.data?.totalResults.toLocaleString("en-US")} results {query !== "" && `for "${query}"`}
-        </div>
-      )}      
+      {data?.pages[0]?.data?.results &&
+        data?.pages[0]?.data?.results?.length > 0 && (
+          <div className="mb-6 text-muted-foreground text-sm mx-5">
+            {data?.pages[0]?.data?.totalResults.toLocaleString("en-US")} results{" "}
+            {query !== "" && `for "${query}"`}
+          </div>
+        )}
 
       {isLoading && (
         <div className="p-4 flex items-center justify-center">
@@ -118,15 +127,24 @@ function Discover(): JSX.Element {
       <div className="flex flex-wrap gap-8 max-w-6xl items-center justify-center">
         {data?.pages.map((page, pageIndex) =>
           page.data.results.map((manxa: Manxa) => (
-            <Link to={`/manxa/${extractSlug(manxa.url, "https://www.mangakakalot.gg/manga/")}`} key={`${pageIndex}-${manxa.title}`}>
+            <Link
+              to={`/manxa/${extractSlug(
+                manxa.url,
+                "https://www.mangakakalot.gg/manga/"
+              )}`}
+              key={`${pageIndex}-${manxa.title}`}
+            >
               <ManxaCard manxa={manxa} />
             </Link>
           ))
         )}
       </div>
 
-      <div ref={loadMoreRef} className="h-16 mt-5 flex justify-center items-center">
-        {isFetchingNextPage &&
+      <div
+        ref={loadMoreRef}
+        className="h-16 mt-5 flex justify-center items-center"
+      >
+        {isFetchingNextPage && (
           <svg
             className="w-8 animate-spin fill-foreground"
             xmlns="http://www.w3.org/2000/svg"
@@ -135,15 +153,14 @@ function Discover(): JSX.Element {
             <title>loading</title>
             <path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
           </svg>
-        }
+        )}
       </div>
 
-      {!isLoading &&
-        data?.pages[0]?.data?.results.length === 0 && (
-          <p className="text-muted-foreground mt-8">No manxas found</p>
-        )}
+      {!isLoading && data?.pages[0]?.data?.results.length === 0 && (
+        <p className="text-muted-foreground mt-8">No manxas found</p>
+      )}
 
-      <ScrollToTopButton className="fixed bottom-2 right-2"/>
+      <ScrollToTopButton className="fixed bottom-2 right-2" />
     </div>
   );
 }

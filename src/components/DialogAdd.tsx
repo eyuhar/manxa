@@ -27,7 +27,7 @@ import {
   removeFavorite,
 } from "@/services/api";
 import { Checkbox } from "./ui/checkbox";
-import type { AddFavoriteResponse, AddListResponse } from "@/types";
+import type { AddFavoriteResponse, ManageListResponse } from "@/types";
 import { toast } from "sonner";
 import { buildUrl } from "@/lib/utils";
 
@@ -111,8 +111,8 @@ export default function DialogAdd({
 
   // addListMutation handles adding of a new List
   const addListMutation = useMutation({
-    mutationFn: (): Promise<AddListResponse> => addList(token!, newList),
-    onSuccess: (data: AddListResponse) => {
+    mutationFn: (): Promise<ManageListResponse> => addList(token!, newList),
+    onSuccess: (data: ManageListResponse) => {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["userLists"] });
       setNewList("");
