@@ -17,7 +17,7 @@ export async function fetchManxaList(page = 1): Promise<ManxaListResponse> {
     );
 
     if (!res.ok) {
-      throw new Error("Failed to fetch featured manxas");
+      throw new Error("Failed to fetch manxa list");
     }
 
     return res.json();
