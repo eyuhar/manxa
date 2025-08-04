@@ -282,7 +282,7 @@ function MyManxa(): JSX.Element {
               </Dialog>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="destructive" size="sm">
+                  <Button variant="outline" size="sm">
                     Delete
                   </Button>
                 </DialogTrigger>

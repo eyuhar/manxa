@@ -90,25 +90,6 @@ export async function fetchChapterImageUrls(
   }
 }
 
-// Function to fetch image from the API and cache it as a Blob
-export async function fetchImageAsBlobUrl(imageUrl: string): Promise<string> {
-  try {
-    const res = await fetch(
-      "http://52.59.130.106/api/image-proxy?url=" + encodeURIComponent(imageUrl)
-    );
-
-    if (!res.ok) {
-      throw new Error("Failed to fetch image");
-    }
-
-    const blob = await res.blob();
-    return URL.createObjectURL(blob);
-  } catch (error) {
-    console.error("fetchImageAsBlobUrl Error", error);
-    throw error;
-  }
-}
-
 // create a custom favorites list
 export async function addList(
   token: string,
