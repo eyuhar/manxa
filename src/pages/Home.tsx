@@ -42,7 +42,12 @@ export default function Home(): JSX.Element {
         Featured Manxa
       </h1>
       <hr className="w-full mt-2 mb-2 border-border" />
-      <ManxaCarousel manxas={data.data.results.slice(0, 4)}></ManxaCarousel>
+      <ManxaCarousel
+        manxas={data.data.results
+          .slice(0, 3)
+          .reverse()
+          .concat(data.data.results.slice(3, 4))}
+      ></ManxaCarousel>
       <hr className="w-full mt-2 mb-2 border-border" />
       <h1 className="w-full text-center font-semibold text-xl mt-10 mb-10">
         Top Manxa

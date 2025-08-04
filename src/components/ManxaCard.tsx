@@ -22,11 +22,18 @@ export default function ManxaCard({ manxa }: Props): JSX.Element {
           </CardTitle>
         </>
       )}
+
       {isError ? (
-        <div className="text-destructive">Failed to load image</div>
+        <div className="w-full h-[300px] text-destructive flex items-center justify-center mb-4">
+          Failed to load image
+        </div>
       ) : (
         <>
-          <div className="h-72 overflow-hidden rounded-t-md">
+          <div
+            className={
+              "h-72 overflow-hidden rounded-t-md" + (isLoading ? " hidden" : "")
+            }
+          >
             <img
               className="rounded-t-md h-full w-full object-cover hover:scale-110 transition-all ease-in-out"
               src={
@@ -41,7 +48,12 @@ export default function ManxaCard({ manxa }: Props): JSX.Element {
               }}
             />
           </div>
-          <CardTitle className="font-normal text-sm pl-1 mb-0 pb-0 h-5 ">
+          <CardTitle
+            className={
+              "font-normal text-sm pl-1 mb-0 pb-0 h-5" +
+              (isLoading ? " hidden" : "")
+            }
+          >
             <p className="max-w-40 text-xs font-medium overflow-hidden text-ellipsis whitespace-nowrap">
               {manxa.title}
             </p>

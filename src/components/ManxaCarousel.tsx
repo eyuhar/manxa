@@ -17,7 +17,7 @@ type Props = {
 export default function ManxaCarousel({ manxas }: Props): JSX.Element {
   return (
     <Carousel
-      className="xl:max-w-6xl w-full"
+      className="max-w-6xl w-[90%]"
       plugins={[
         Autoplay({
           delay: 3000,
