@@ -15,7 +15,7 @@ export type ManxaListResponse = {
   };
 };
 
-type Chapter = {
+export type Chapter = {
   chapter: string;
   chapterUrl: string;
   chapterViews: number;
@@ -96,4 +96,21 @@ export type RemoveFavoriteResponse = {
       messsage: string;
     }
   ];
+};
+
+export type ManageChapterProgressResponse = {
+  results: [
+    {
+      manxa_url: string;
+      chapter_url: string;
+      success: boolean;
+      status: number;
+      message: string;
+    }
+  ];
+};
+
+export type FetchChapterProgressResponse = {
+  success: boolean;
+  read_chapters: string[];
 };

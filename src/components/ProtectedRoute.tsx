@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { getToken } from "../services/auth";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Props {
   children: React.ReactNode;
@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default function ProtectedRoute({ children, location }: Props) {
-  const token = getToken();
+  const { token } = useAuth();
   return token ? (
     <>{children}</>
   ) : (

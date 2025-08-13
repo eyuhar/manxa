@@ -7,6 +7,8 @@ import type {
   AddFavoriteResponse,
   FetchFavoritesResponse,
   RemoveFavoriteResponse,
+  FetchChapterProgressResponse,
+  ManageChapterProgressResponse,
 } from "@/types";
 
 //fetches a list of manxas from the API
@@ -273,6 +275,90 @@ export async function removeFavorite(
     return data;
   } catch (error) {
     console.error("removeFavorite Error", error);
+    throw error;
+  }
+}
+
+// fetch list of chapter urls marked as read for a specific manxa
+export async function fetchChapterProgress(
+  token: string,
+  manxa_url: string
+): Promise<FetchChapterProgressResponse> {
+  try {
+    const response = await fetch(
+      "http://52.59.130.106/api/chapter-progress?manxa_url=" +
+        encodeURIComponent(manxa_url),
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("fetchChapterProgress Error", error);
+    throw error;
+  }
+}
+
+// Marks one or more chapters as read for a user by sending their progress to the API.
+export async function markChapterAsRead(
+  token: string,
+  toMark: { manxa_url: string; chapter_url: string }[]
+): Promise<ManageChapterProgressResponse> {
+  try {
+    const response = await fetch("http://52.59.130.106/api/chapter-progress", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(toMark),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("markChapterAsRead Error", error);
+    throw error;
+  }
+}
+
+// Marks one or more chapters as unread for a user by sending their progress to the API.
+export async function markChapterAsUnread(
+  token: string,
+  toUnmark: { manxa_url: string; chapter_url: string }[]
+): Promise<ManageChapterProgressResponse> {
+  try {
+    const response = await fetch("http://52.59.130.106/api/chapter-progress", {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(toUnmark),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("markChapterAsUnread Error", error);
     throw error;
   }
 }

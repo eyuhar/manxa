@@ -28,6 +28,7 @@ type User = {
 type AuthContextType = {
   user: User | null;
   isLoading: boolean;
+  token: string | null;
   logout: () => void;
   login: (token: string | null) => void;
 };
@@ -35,6 +36,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: false,
+  token: null,
   logout: () => {},
   login: () => {},
 });
@@ -79,7 +81,7 @@ export function AuthProvider({
 
   return (
     <AuthContext.Provider
-      value={{ user: user ?? null, isLoading, logout, login }}
+      value={{ user: user ?? null, isLoading, token, logout, login }}
     >
       {children}
     </AuthContext.Provider>

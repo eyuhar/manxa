@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/contexts/AuthContext";
 import { extractSlug } from "@/lib/utils";
 import {
   addList,
@@ -20,7 +21,6 @@ import {
   removeList,
   renameList,
 } from "@/services/api";
-import { getToken } from "@/services/auth";
 import type { ManageListResponse } from "@/types";
 import {
   useMutation,
@@ -38,7 +38,7 @@ function MyManxa(): JSX.Element {
   const [newList, setNewList] = useState<string>("");
   const [newName, setNewName] = useState<string>("");
   const queryClient = useQueryClient();
-  const token = getToken();
+  const { token } = useAuth();
 
   // get the users custom lists
   const {

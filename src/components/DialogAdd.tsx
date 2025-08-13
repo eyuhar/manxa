@@ -11,11 +11,7 @@ import {
 } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  login as authLogin,
-  getToken,
-  type LoginResponse,
-} from "@/services/auth";
+import { login as authLogin, type LoginResponse } from "@/services/auth";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Link } from "react-router-dom";
@@ -44,7 +40,7 @@ export default function DialogAdd({
   const [newList, setNewList] = useState<string>("");
   const [initialLists, setInitialLists] = useState<string[]>([]);
 
-  const { user, login } = useAuth();
+  const { user, token, login } = useAuth();
   const queryClient = useQueryClient();
 
   // useMutation handles the login call
@@ -76,7 +72,6 @@ export default function DialogAdd({
   };
 
   // get the users custom lists
-  const token = getToken();
   const { data: userLists, isLoading: isLoadingUserLists } = useQuery({
     queryKey: ["userLists"],
     queryFn: () => fetchLists(token!),
@@ -314,7 +309,7 @@ export default function DialogAdd({
             <title>bookmark-outline</title>
             <path d="M17,18L12,15.82L7,18V5H17M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,3.89 18.1,3 17,3Z" />
           </svg>
-          <p>Add</p>
+          <p>Bookmark</p>
         </Button>
       </DialogTrigger>
       <DialogContent className="w-sm">
