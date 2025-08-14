@@ -75,7 +75,6 @@ export default function ManxaDetail() {
   // This will only run if the user is authenticated and the manxaUrl is available
   const {
     data: chapterProgress,
-    isLoading: isLoadingChapterProgress,
     isError: isErrorChapterProgress,
     error: chapterProgressError,
   } = useQuery({
@@ -114,6 +113,9 @@ export default function ManxaDetail() {
       queryClient.invalidateQueries({
         queryKey: ["chapterProgress", manxaUrl],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["readingHistory"],
+      });
       if (variables.length === 1) {
         toast.success("Chapter marked as read.");
       } else {
@@ -150,6 +152,9 @@ export default function ManxaDetail() {
       // This ensures the UI updates with the new read status
       queryClient.invalidateQueries({
         queryKey: ["chapterProgress", manxaUrl],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["readingHistory"],
       });
       if (variables.length === 1) {
         toast.success("Chapter marked as unread.");

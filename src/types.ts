@@ -114,3 +114,14 @@ export type FetchChapterProgressResponse = {
   success: boolean;
   read_chapters: string[];
 };
+
+export type HistoryElement = {
+  manxa_url: string;
+  chapter_url: string;
+  read_at: string;
+};
+
+export type FetchHistoryResponse = {
+  success: boolean;
+  history: HistoryElement[];
+};

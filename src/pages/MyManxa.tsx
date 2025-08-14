@@ -71,7 +71,7 @@ function MyManxa(): JSX.Element {
   const favorites = favoritesData?.favorites || [];
   const manxaQueries = useQueries({
     queries: favorites.map((fav) => ({
-      queryKey: ["favorite", fav.manxa_url],
+      queryKey: ["manxaDetail", fav.manxa_url],
       queryFn: () => fetchManxa(fav.manxa_url),
       enabled: !!fav.manxa_url,
       staleTime: 1000 * 60 * 60, // 1 hour

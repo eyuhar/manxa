@@ -9,6 +9,7 @@ import type {
   RemoveFavoriteResponse,
   FetchChapterProgressResponse,
   ManageChapterProgressResponse,
+  FetchHistoryResponse,
 } from "@/types";
 
 //fetches a list of manxas from the API
@@ -359,6 +360,31 @@ export async function markChapterAsUnread(
     return data;
   } catch (error) {
     console.error("markChapterAsUnread Error", error);
+    throw error;
+  }
+}
+
+// fetch reading history
+export async function fetchHistory(
+  token: string
+): Promise<FetchHistoryResponse> {
+  try {
+    const response = await fetch("http://52.59.130.106/api/history", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("fetchHistory Error", error);
     throw error;
   }
 }
