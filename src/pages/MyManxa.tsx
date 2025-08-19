@@ -189,16 +189,16 @@ function MyManxa(): JSX.Element {
                       <TabsTrigger
                         key={list.name}
                         value={list.name}
-                        className="relative data-[state=active]:bg-muted data-[state=active]:shadow-none"
+                        className="relative data-[state=active]:bg-muted data-[state=active]:shadow-none data-[state=active]:border-none"
                       >
                         {selectedList === list.name && (
                           <motion.div
                             layoutId="tabHighlight"
-                            className="absolute inset-0 bg-background rounded-md shadow-sm"
+                            className="absolute inset-0 bg-background rounded-md shadow-sm shadow-ring"
                             transition={{
                               type: "spring",
                               stiffness: 200,
-                              damping: 40,
+                              damping: 30,
                             }}
                           />
                         )}

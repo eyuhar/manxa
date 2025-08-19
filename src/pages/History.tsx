@@ -66,11 +66,11 @@ function History(): JSX.Element {
   }
 
   return (
-    <ul className="flex flex-col gap-1 w-full max-w-3xl mt-5 text-foreground">
+    <ul className="flex flex-col gap-3 w-full max-w-3xl mt-5 text-foreground">
       {[...historyData.history].map((historyItem) => (
         <li
           key={historyItem.chapter_url}
-          className="flex gap-2 w-full p-1 shadow-sm rounded-lg"
+          className="flex gap-2 w-full p-1 shadow-sm rounded-lg shadow-border"
         >
           <div className="flex gap-2 p-1 w-full justify-between">
             <div className="flex gap-2">

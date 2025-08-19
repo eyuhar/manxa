@@ -13,7 +13,7 @@ export default function ManxaCard({ manxa }: Props): JSX.Element {
   const [isError, setIsError] = useState(false);
 
   return (
-    <Card className="w-44 max-h-72 pt-0 pb-3 border-0 hover:animate-pulse gap-3 rounded-md [@media(max-width:900px)]:w-36 [@media(max-width:900px)]:max-h-60">
+    <Card className="w-44 max-h-72 pt-0 pb-3 border-0 hover:animate-pulse gap-3 rounded-md [@media(max-width:900px)]:w-36 [@media(max-width:900px)]:max-h-60 shadow-ring">
       {isLoading && !isError && (
         <>
           <Skeleton className="h-72 overflow-hidden rounded-t-md"></Skeleton>

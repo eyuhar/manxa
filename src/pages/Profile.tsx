@@ -130,7 +130,7 @@ function Profile(): JSX.Element {
   return (
     <div className="max-w-6xl w-full p-1">
       <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] w-full gap-3 p-1">
-        <Card className="min-w-25 flex flex-row gap-2 justify-center px-3">
+        <Card className="min-w-25 flex flex-row gap-2 justify-center px-3 shadow-border">
           <CardHeader className="flex flex-col items-center justify-center ml-3">
             <Skeleton className="rounded-full w-7 h-7"></Skeleton>
             <Skeleton className="h-15 w-12 rounded-t-2xl"></Skeleton>
@@ -147,7 +147,7 @@ function Profile(): JSX.Element {
           </CardContent>
         </Card>
 
-        <Card className="justify-center items-center gap-3 p-6 w-[100%]">
+        <Card className="justify-center items-center gap-3 p-6 w-[100%] shadow-border">
           <CardTitle className="text-sm flex gap-1 items-center">
             <Trophy className="text-foreground" size={20} />
             Top 3 Genres
@@ -169,7 +169,8 @@ function Profile(): JSX.Element {
             )}
           </CardDescription>
         </Card>
-        <Card className=" items-center gap-3 p-6 w-[100%]">
+
+        <Card className=" items-center gap-3 p-6 w-[100%] shadow-border">
           <CardTitle className="text-sm flex gap-1 items-center">
             <Clock className="text-foreground" size={20} />
             Last Activity
@@ -182,7 +183,8 @@ function Profile(): JSX.Element {
             )}
           </CardDescription>
         </Card>
-        <Card className="justify-center items-center gap-3 p-6 w-[100%]">
+
+        <Card className="justify-center items-center gap-3 p-6 w-[100%] shadow-border">
           <CardTitle className="text-sm flex gap-1 items-center">
             <LibraryBig className="text-foreground" size={20} />
             Manxa Read
@@ -191,7 +193,8 @@ function Profile(): JSX.Element {
             {uniqueManxaUrls.length}
           </CardDescription>
         </Card>
-        <Card className="justify-center items-center gap-3 p-6 w-[100%]">
+
+        <Card className="justify-center items-center gap-3 p-6 w-[100%] shadow-border">
           <CardTitle className="text-sm flex gap-1 items-center">
             <BookOpenText className="text-foreground" size={20} />
             Chapter Read
@@ -200,7 +203,8 @@ function Profile(): JSX.Element {
             {historyData?.history.length}
           </CardDescription>
         </Card>
-        <Card className="justify-center items-center gap-3 p-6 w-[100%]">
+
+        <Card className="justify-center items-center gap-3 p-6 w-[100%] shadow-border">
           <CardTitle className="text-sm flex gap-1 items-center">
             <Star className="text-foreground" size={20} />
             Most Read Manxa
@@ -215,7 +219,7 @@ function Profile(): JSX.Element {
           </CardDescription>
         </Card>
       </div>
-      <Card className="m-1">
+      <Card className="m-1 mt-2 shadow-border">
         <CardHeader className="w-full justify-center">
           <CardTitle className="text-sm">Genre Distribution</CardTitle>
         </CardHeader>

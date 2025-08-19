@@ -37,28 +37,6 @@ type GenreChartProps = {
 };
 
 export default function GenreChart({ data }: GenreChartProps) {
-  // Get theme colors from CSS variables
-  const colorForeground =
-    typeof window !== "undefined"
-      ? getComputedStyle(document.documentElement)
-          .getPropertyValue("--color-foreground")
-          .trim()
-      : "#8884d8";
-
-  const colorMutedForeground =
-    typeof window !== "undefined"
-      ? getComputedStyle(document.documentElement)
-          .getPropertyValue("--color-muted-foreground")
-          .trim()
-      : "#ccc";
-
-  const colorBackground =
-    typeof window !== "undefined"
-      ? getComputedStyle(document.documentElement)
-          .getPropertyValue("--color-background")
-          .trim()
-      : "#010000";
-
   // Fallback if there is no data
   if (!data || data.length === 0) {
     return (
@@ -84,15 +62,25 @@ export default function GenreChart({ data }: GenreChartProps) {
             bottom: 0,
           }}
         >
-          <CartesianGrid strokeDasharray="2 5" fill={colorBackground} />
-          <XAxis dataKey="name" stroke={colorMutedForeground} />
-          <YAxis allowDecimals={false} stroke={colorMutedForeground} />
+          <CartesianGrid
+            strokeDasharray="2 5"
+            fill={"var(--color-card)"}
+            stroke="var(--color-ring)"
+          />
+          <XAxis dataKey="name" stroke={"var(--color-muted-foreground)"} />
+          <YAxis
+            allowDecimals={false}
+            stroke={"var(--color-muted-foreground)"}
+          />
           <Tooltip cursor={{ fill: "transparent" }} content={CustomTooltip} />
           <Bar
             dataKey="value"
-            fill={colorForeground}
+            fill={"var(--color-foreground)"}
             activeBar={
-              <Rectangle fill={colorMutedForeground} stroke={colorForeground} />
+              <Rectangle
+                fill={"var(--color-muted-foreground)"}
+                stroke={"var(--color-foreground)"}
+              />
             }
           />
         </BarChart>

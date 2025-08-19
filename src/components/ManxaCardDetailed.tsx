@@ -68,7 +68,7 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
           alt={manxaData.title}
           onClick={handleClick}
         />
-        <Card className="border-0 h-100 shadow-none overflow-scroll overflow-x-hidden scrollbar">
+        <Card className="border-0 h-100 shadow-none overflow-scroll overflow-x-hidden scrollbar bg-background">
           <CardHeader>
             <CardTitle
               className="cursor-pointer hover:underline"
