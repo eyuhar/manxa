@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 function History(): JSX.Element {
   const { token } = useAuth();
 
+  // fetch reading history data
   const {
     data: historyData,
     isLoading: isLoadingHistoryData,
@@ -20,6 +21,7 @@ function History(): JSX.Element {
     staleTime: 1000 * 60 * 15, // 15 min
   });
 
+  // get unique manxa urls from list of chapters
   const uniqueManxaUrls = historyData
     ? Array.from(new Set(historyData.history.map((item) => item.manxa_url)))
     : [];
@@ -37,7 +39,6 @@ function History(): JSX.Element {
     const map = new Map<string, ManxaDetailed>();
     uniqueManxaUrls.forEach((url, i) => {
       const data = manxaQueries[i]?.data;
-      // Hier auf die richtige property zugreifen, z.B. imageUrl
       map.set(url, data?.data!);
     });
     return map;
@@ -65,8 +66,8 @@ function History(): JSX.Element {
   }
 
   return (
-    <ul className="flex flex-col gap-1 w-full max-w-3xl mt-5">
-      {[...historyData.history].reverse().map((historyItem) => (
+    <ul className="flex flex-col gap-1 w-full max-w-3xl mt-5 text-foreground">
+      {[...historyData.history].map((historyItem) => (
         <li
           key={historyItem.chapter_url}
           className="flex gap-2 w-full p-1 shadow-sm rounded-lg"

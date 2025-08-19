@@ -132,6 +132,10 @@
     background: var(--color-foreground);
     border-radius: 100vh;
   }
+
+  .recharts-no-outline *:focus {
+    outline: none !important;
+  }
 }
 
 @theme {
