@@ -160,7 +160,7 @@ function Discover(): JSX.Element {
         <p className="text-muted-foreground mt-8">No manxas found</p>
       )}
 
-      <ScrollToTopButton className="fixed bottom-2 right-2" />
+      <ScrollToTopButton className="fixed bottom-5 right-5" />
     </div>
   );
 }
