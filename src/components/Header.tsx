@@ -12,6 +12,7 @@ import {
 } from "./ui/dropdown-menu";
 import { motion } from "framer-motion";
 import ManxaLogo from "@/assets/ManxaLogo.png";
+import ThemeButton from "./ThemeButton";
 
 const navItems: { name: string; href: string }[] = [
   { name: "Home", href: "/" },
@@ -97,6 +98,7 @@ function Header(): JSX.Element {
             </span>
           ) : user ? (
             <div className="flex items-center gap-2">
+              <ThemeButton />
               <Button
                 variant="outline"
                 className="cursor-pointer"
@@ -106,9 +108,12 @@ function Header(): JSX.Element {
               </Button>
             </div>
           ) : (
-            <Button variant="outline" asChild>
-              <Link to="login">Login</Link>
-            </Button>
+            <div className="flex items-center gap-2">
+              <ThemeButton />
+              <Button variant="outline" asChild>
+                <Link to="login">Login</Link>
+              </Button>
+            </div>
           )}
         </div>
       </div>
