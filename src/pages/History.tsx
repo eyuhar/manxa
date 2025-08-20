@@ -70,7 +70,7 @@ function History(): JSX.Element {
       {[...historyData.history].map((historyItem) => (
         <li
           key={historyItem.chapter_url}
-          className="flex gap-2 w-full p-1 shadow-sm rounded-lg shadow-border"
+          className="flex gap-2 w-full p-1 shadow-sm rounded-lg shadow-border bg-card border"
         >
           <div className="flex gap-2 p-1 w-full justify-between">
             <div className="flex gap-2">

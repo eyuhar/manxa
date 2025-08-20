@@ -123,106 +123,113 @@ function Header(): JSX.Element {
           alt="Manxa Logo"
           className="w-34 bg-transparent mr-2"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className="focus-visible:ring-0 cursor-pointer"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <title>menu</title>
-                <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" />
-              </svg>
-              Menu
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="mr-4">
-            {user ? (
-              <>
-                <DropdownMenuLabel className="max-w-140 overflow-hidden text-ellipsis whitespace-nowrap font-bold text-base flex items-center gap-1">
-                  <div>
-                    <svg
-                      className="w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                    >
-                      <title>account</title>
-                      <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
-                    </svg>
-                  </div>
-                  {user.user_name}
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-              </>
-            ) : (
-              <>
-                <DropdownMenuItem className="flex items-center justify-center focus:bg-red">
-                  <Button>
-                    <Link to="login" className="w-full">
-                      Login
-                    </Link>
-                  </Button>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-              </>
-            )}
-
-            {navItems.map((item) => {
-              const isActive = pathname === item.href;
-
-              return (
-                <DropdownMenuItem key={item.href} className="relative w-full">
-                  <Link
-                    to={item.href}
-                    className="w-full relative font-medium text-sm"
-                  >
-                    <div className="inline-block relative">
-                      {item.name}
-                      {isActive && (
-                        <motion.div
-                          className="absolute left-0 right-0 -bottom-1 h-[2px] "
-                          transition={{
-                            ease: "easeInOut",
-                            stiffness: 300,
-                            damping: 30,
-                            duration: 0.6,
-                          }}
-                        >
-                          <motion.div
-                            key={item.href}
-                            initial={{
-                              scaleX: 0.1,
-                              transition: { duration: 0.6 },
-                            }}
-                            animate={{
-                              scaleX: 1,
-                              transition: { duration: 0.4, delay: 0.1 },
-                            }}
-                            className="h-full bg-foreground origin-left"
-                            transition={{ ease: "easeInOut" }}
-                          />
-                        </motion.div>
-                      )}
+        <div className="flex gap-2">
+          <ThemeButton />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="focus-visible:ring-0 cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="fill-foreground"
+                >
+                  <title>menu</title>
+                  <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" />
+                </svg>
+                Menu
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="mr-4">
+              {user ? (
+                <>
+                  <DropdownMenuLabel className="max-w-140 overflow-hidden text-ellipsis whitespace-nowrap font-bold text-base flex items-center gap-1">
+                    <div>
+                      <svg
+                        className="w-5 fill-foreground"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                      >
+                        <title>account</title>
+                        <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
+                      </svg>
                     </div>
-                  </Link>
-                </DropdownMenuItem>
-              );
-            })}
+                    {user.user_name}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                </>
+              ) : (
+                <>
+                  <DropdownMenuItem className="flex items-center justify-center focus:bg-red">
+                    <Button>
+                      <Link to="login" className="w-full">
+                        Login
+                      </Link>
+                    </Button>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                </>
+              )}
 
-            {user ? (
-              <>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout} className="w-full">
-                  <Link to="/" className="w-full font-medium text-sm">
-                    Logout
-                  </Link>
-                </DropdownMenuItem>
-              </>
-            ) : (
-              <></>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
+              {navItems.map((item) => {
+                const isActive = pathname === item.href;
+
+                return (
+                  <DropdownMenuItem key={item.href} className="relative w-full">
+                    <Link
+                      to={item.href}
+                      className="w-full relative font-medium text-sm"
+                    >
+                      <div className="inline-block relative">
+                        {item.name}
+                        {isActive && (
+                          <motion.div
+                            className="absolute left-0 right-0 -bottom-1 h-[2px] "
+                            transition={{
+                              ease: "easeInOut",
+                              stiffness: 300,
+                              damping: 30,
+                              duration: 0.6,
+                            }}
+                          >
+                            <motion.div
+                              key={item.href}
+                              initial={{
+                                scaleX: 0.1,
+                                transition: { duration: 0.6 },
+                              }}
+                              animate={{
+                                scaleX: 1,
+                                transition: { duration: 0.4, delay: 0.1 },
+                              }}
+                              className="h-full bg-foreground origin-left"
+                              transition={{ ease: "easeInOut" }}
+                            />
+                          </motion.div>
+                        )}
+                      </div>
+                    </Link>
+                  </DropdownMenuItem>
+                );
+              })}
+
+              {user ? (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={logout} className="w-full">
+                    <Link to="/" className="w-full font-medium text-sm">
+                      Logout
+                    </Link>
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <></>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </header>
   );

@@ -475,7 +475,7 @@ export default function ManxaDetail() {
             alt={manxa.title}
           />
         </div>
-        <Card className="border-0 shadow-none min-w-80 w-full">
+        <Card className="border-0 shadow-none min-w-80 w-full bg-background">
           <CardHeader className="flex flex-col">
             <CardTitle className="[@media(max-width:655px)]:self-center">
               {manxa.title}
@@ -573,7 +573,7 @@ export default function ManxaDetail() {
             }}
           />
         </Card>
-        <Card className="mt-8 max-w-[220px] [@media(max-width:655px)]:max-w-full w-full border-0 shadow-none">
+        <Card className="mt-8 max-w-[220px] [@media(max-width:655px)]:max-w-full w-full border-0 shadow-none bg-background">
           <CardHeader className="flex flex-col">
             <CardTitle className="self-center mb-2">Trending</CardTitle>
           </CardHeader>

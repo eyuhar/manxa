@@ -6,6 +6,7 @@ import { buildUrl, extractSlug, unslug } from "@/lib/utils";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
+import { Minus, Plus } from "lucide-react";
 
 type ZoomLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
@@ -140,10 +141,7 @@ export default function ChapterReader() {
             setZoomLevel((prev) => Math.max(1, prev - 1) as ZoomLevel)
           }
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <title>minus</title>
-            <path d="M19,13H5V11H19V13Z" />
-          </svg>
+          <Minus />
         </Button>
         <Button
           variant="outline"
@@ -153,10 +151,7 @@ export default function ChapterReader() {
             setZoomLevel((prev) => Math.min(10, prev + 1) as ZoomLevel)
           }
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <title>plus</title>
-            <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
-          </svg>
+          <Plus />
         </Button>
 
         {isErrorManxaInfo
