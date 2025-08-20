@@ -34,7 +34,11 @@ export default function ThemeButton(): JSX.Element {
 
   return (
     <Button variant={"ghost"} onClick={handleClick}>
-      {activeTheme === "dark" ? <Sun className="!w-5 !h-5" /> : <Moon />}
+      {activeTheme === "dark" ? (
+        <Sun className="!w-4.5 !h-4.5" />
+      ) : (
+        <Moon className="!w-4.5 !h-4.5" />
+      )}
     </Button>
   );
 }
