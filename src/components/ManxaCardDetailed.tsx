@@ -62,7 +62,7 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
         <img
           className="rounded-xl h-80 cursor-pointer"
           src={
-            "http://52.59.130.106/api/image-proxy?url=" +
+            "https://52.59.130.106/api/image-proxy?url=" +
             encodeURIComponent(manxaData.img)
           }
           alt={manxaData.title}
@@ -122,7 +122,7 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
         <img
           className="rounded-xl h-80"
           src={
-            "http://52.59.130.106/api/image-proxy?url=" +
+            "https://52.59.130.106/api/image-proxy?url=" +
             encodeURIComponent(manxaData.img)
           }
           alt={manxaData.title}
