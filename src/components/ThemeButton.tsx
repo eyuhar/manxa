@@ -6,35 +6,14 @@ import { Moon, Sun } from "lucide-react";
 export default function ThemeButton(): JSX.Element {
   const { theme, setTheme } = useTheme();
 
-  // determine the actual theme when system is active
-  const activeTheme =
-    theme === "system"
-      ? window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light"
-      : theme;
-
   const handleClick = () => {
-    let nextTheme: Theme = "system";
-
-    if (activeTheme === "dark") {
-      nextTheme = "light";
-    } else if (activeTheme === "light") {
-      nextTheme = "dark";
-    } else if (activeTheme === "system") {
-      // Prüfen, ob das System dark oder light ist
-      const systemIsDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-      nextTheme = systemIsDark ? "light" : "dark";
-    }
-
+    const nextTheme: Theme = theme === "dark" ? "light" : "dark";
     setTheme(nextTheme);
   };
 
   return (
-    <Button variant={"ghost"} onClick={handleClick}>
-      {activeTheme === "dark" ? (
+    <Button variant="ghost" onClick={handleClick}>
+      {theme === "dark" ? (
         <Sun className="!w-4.5 !h-4.5" />
       ) : (
         <Moon className="!w-4.5 !h-4.5" />
