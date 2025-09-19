@@ -27,7 +27,7 @@ export async function register(
   username: string
 ): Promise<RegisterResponse> {
   try {
-    const res = await fetch("https://52.59.130.106/api/register", {
+    const res = await fetch("https://manxa-backend.duckdns.org/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password, user_name: username }),
@@ -50,7 +50,7 @@ export async function login(
   password: string
 ): Promise<LoginResponse> {
   try {
-    const res = await fetch("https://52.59.130.106/api/login", {
+    const res = await fetch("https://manxa-backend.duckdns.org/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -69,7 +69,7 @@ export async function login(
 
 export async function fetchProfile(token: string): Promise<ProfileResponse> {
   try {
-    const res = await fetch("https://52.59.130.106/api/profile", {
+    const res = await fetch("https://manxa-backend.duckdns.org/api/profile", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

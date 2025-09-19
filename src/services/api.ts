@@ -16,7 +16,8 @@ import type {
 export async function fetchManxaList(page = 1): Promise<ManxaListResponse> {
   try {
     const res = await fetch(
-      "https://52.59.130.106/api/manxas?page=" + encodeURIComponent(page)
+      "https://manxa-backend.duckdns.org/api/manxas?page=" +
+        encodeURIComponent(page)
     );
 
     if (!res.ok) {
@@ -34,7 +35,8 @@ export async function fetchManxaList(page = 1): Promise<ManxaListResponse> {
 export async function fetchManxa(url: string): Promise<ManxaDetailedResponse> {
   try {
     const res = await fetch(
-      "https://52.59.130.106/api/manxa?manxa_url=" + encodeURIComponent(url)
+      "https://manxa-backend.duckdns.org/api/manxa?manxa_url=" +
+        encodeURIComponent(url)
     );
 
     if (!res.ok) {
@@ -55,7 +57,7 @@ export async function searchManxas(
 ): Promise<ManxaListResponse> {
   try {
     const res = await fetch(
-      "https://52.59.130.106/api/manxas?query=" +
+      "https://manxa-backend.duckdns.org/api/manxas?query=" +
         encodeURIComponent(term) +
         "&page=" +
         encodeURIComponent(page)
@@ -78,7 +80,7 @@ export async function fetchChapterImageUrls(
 ): Promise<ChapterImageUrlsResponse> {
   try {
     const res = await fetch(
-      "https://52.59.130.106/api/chapter?chapter=" +
+      "https://manxa-backend.duckdns.org/api/chapter?chapter=" +
         encodeURIComponent(chapterUrl)
     );
 
@@ -99,14 +101,17 @@ export async function addList(
   name: string
 ): Promise<ManageListResponse> {
   try {
-    const response = await fetch("https://52.59.130.106/api/lists", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name }),
-    });
+    const response = await fetch(
+      "https://manxa-backend.duckdns.org/api/lists",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name }),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status} ${response.statusText}`);
@@ -126,14 +131,17 @@ export async function removeList(
   name: string
 ): Promise<ManageListResponse> {
   try {
-    const response = await fetch("https://52.59.130.106/api/lists", {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name }),
-    });
+    const response = await fetch(
+      "https://manxa-backend.duckdns.org/api/lists",
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name }),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status} ${response.statusText}`);
@@ -153,14 +161,17 @@ export async function renameList(
   payload: { old_name: string; new_name: string }
 ): Promise<ManageListResponse> {
   try {
-    const response = await fetch("https://52.59.130.106/api/lists", {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+    const response = await fetch(
+      "https://manxa-backend.duckdns.org/api/lists",
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status} ${response.statusText}`);
@@ -177,13 +188,16 @@ export async function renameList(
 // get all user-defined lists
 export async function fetchLists(token: string): Promise<FetchListsResponse> {
   try {
-    const response = await fetch("https://52.59.130.106/api/lists", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(
+      "https://manxa-backend.duckdns.org/api/lists",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Failed to fetch user lists.");
@@ -203,14 +217,17 @@ export async function addFavorite(
   favorites: { title: string; manxa_url: string; list_name: string }[]
 ): Promise<AddFavoriteResponse> {
   try {
-    const response = await fetch("https://52.59.130.106/api/favorites", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(favorites),
-    });
+    const response = await fetch(
+      "https://manxa-backend.duckdns.org/api/favorites",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(favorites),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status} ${response.statusText}`);
@@ -231,7 +248,8 @@ export async function fetchFavorites(
 ): Promise<FetchFavoritesResponse> {
   try {
     const response = await fetch(
-      "https://52.59.130.106/api/favorites?list=" + encodeURIComponent(list),
+      "https://manxa-backend.duckdns.org/api/favorites?list=" +
+        encodeURIComponent(list),
       {
         method: "GET",
         headers: {
@@ -259,14 +277,17 @@ export async function removeFavorite(
   favorites: { manxa_url: string; list_name: string }[]
 ): Promise<RemoveFavoriteResponse> {
   try {
-    const response = await fetch("https://52.59.130.106/api/favorites", {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(favorites),
-    });
+    const response = await fetch(
+      "https://manxa-backend.duckdns.org/api/favorites",
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(favorites),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status} ${response.statusText}`);
@@ -287,7 +308,7 @@ export async function fetchChapterProgress(
 ): Promise<FetchChapterProgressResponse> {
   try {
     const response = await fetch(
-      "https://52.59.130.106/api/chapter-progress?manxa_url=" +
+      "https://manxa-backend.duckdns.org/api/chapter-progress?manxa_url=" +
         encodeURIComponent(manxa_url),
       {
         method: "GET",
@@ -316,14 +337,17 @@ export async function markChapterAsRead(
   toMark: { manxa_url: string; chapter_url: string }[]
 ): Promise<ManageChapterProgressResponse> {
   try {
-    const response = await fetch("https://52.59.130.106/api/chapter-progress", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(toMark),
-    });
+    const response = await fetch(
+      "https://manxa-backend.duckdns.org/api/chapter-progress",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(toMark),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status} ${response.statusText}`);
@@ -343,14 +367,17 @@ export async function markChapterAsUnread(
   toUnmark: { manxa_url: string; chapter_url: string }[]
 ): Promise<ManageChapterProgressResponse> {
   try {
-    const response = await fetch("https://52.59.130.106/api/chapter-progress", {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(toUnmark),
-    });
+    const response = await fetch(
+      "https://manxa-backend.duckdns.org/api/chapter-progress",
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(toUnmark),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status} ${response.statusText}`);
@@ -369,13 +396,16 @@ export async function fetchHistory(
   token: string
 ): Promise<FetchHistoryResponse> {
   try {
-    const response = await fetch("https://52.59.130.106/api/history", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      "https://manxa-backend.duckdns.org/api/history",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status} ${response.statusText}`);

@@ -469,7 +469,7 @@ export default function ManxaDetail() {
           <img
             className="rounded-md h-full object-cover"
             src={
-              "https://52.59.130.106/api/image-proxy?url=" +
+              "https://manxa-backend.duckdns.org/api/image-proxy?url=" +
               encodeURIComponent(manxa.img)
             }
             alt={manxa.title}
