@@ -119,7 +119,7 @@ function Header(): JSX.Element {
       </div>
       <div className="md:hidden w-full flex items-center gap-2 justify-between">
         <img
-          src="src/assets/ManxaLogo.png"
+          src={ManxaLogo}
           alt="Manxa Logo"
           className="w-34 bg-transparent mr-2"
         />
