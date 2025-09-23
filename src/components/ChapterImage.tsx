@@ -35,7 +35,7 @@ export default function ChapterImage({
       ) : (
         <img
           src={
-            "https://manxa-backend.duckdns.org/api/image-proxy?url=" +
+            "https://manxa-backend.abrdns.com/api/image-proxy?url=" +
             encodeURIComponent(imageUrl)
           }
           alt={`Page ${index + 1}`}

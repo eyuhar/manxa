@@ -83,7 +83,7 @@ function History(): JSX.Element {
               >
                 <img
                   src={
-                    "https://manxa-backend.duckdns.org/api/image-proxy?url=" +
+                    "https://manxa-backend.abrdns.com/api/image-proxy?url=" +
                     encodeURIComponent(
                       manxaMap.get(historyItem.manxa_url)?.img!
                     )

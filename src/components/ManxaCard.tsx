@@ -37,7 +37,7 @@ export default function ManxaCard({ manxa }: Props): JSX.Element {
             <img
               className="rounded-t-md h-full w-full object-cover hover:scale-110 transition-all ease-in-out"
               src={
-                "https://manxa-backend.duckdns.org/api/image-proxy?url=" +
+                "https://manxa-backend.abrdns.com/api/image-proxy?url=" +
                 encodeURIComponent(manxa.img)
               }
               alt={manxa.title}
