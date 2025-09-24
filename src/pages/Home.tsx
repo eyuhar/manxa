@@ -66,7 +66,7 @@ export default function Home(): JSX.Element {
           <CardDescription>
             We've added infinite scrolling to the Discover page. Browse more
             titles without constantly clicking "next" - just scroll down and new
-            manga will load automatically.
+            manxa will load automatically.
           </CardDescription>
         </Card>
       </div>
