@@ -15,6 +15,8 @@
 **Manxa** is a web application for **searching and reading manxa**.  
 With a personal account, users can build and manage their own manxa library.
 
+![App Screenshot](docs/screenshot.png)
+
 ## Features
 
 - 🔍 **Manxa Search & Reading**  
