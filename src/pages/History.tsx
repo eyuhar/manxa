@@ -66,7 +66,7 @@ function History(): JSX.Element {
   }
 
   return (
-    <ul className="flex flex-col gap-3 w-full max-w-3xl mt-5 text-foreground">
+    <ul className="flex flex-col gap-3 w-full max-w-3xl mt-5 text-foreground [@media(max-width:655px)]:p-2">
       {[...historyData.history].map((historyItem) => (
         <li
           key={historyItem.chapter_url}

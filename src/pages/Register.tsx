@@ -55,7 +55,7 @@ function Register(): JSX.Element {
   };
 
   return (
-    <div className="flex items-center justify-center w-full mt-[10%]">
+    <div className="flex items-center justify-center w-full mt-[10%] p-2">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Register a new account</CardTitle>

@@ -120,16 +120,20 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
       </div>
       <div className="[@media(min-width:655px)]:hidden w-full flex flex-col justify-center h-100 items-center">
         <img
-          className="rounded-xl h-80"
+          className="rounded-xl h-80 cursor-pointer"
           src={
             "https://manxa-backend.abrdns.com/api/image-proxy?url=" +
             encodeURIComponent(manxaData.img)
           }
           alt={manxaData.title}
+          onClick={handleClick}
         />
         <Card className="border-0 shadow-none w-full">
           <CardHeader className="w-full">
-            <CardTitle className="flex items-center justify-center hover:underline">
+            <CardTitle
+              className="flex items-center justify-center hover:underline cursor-pointer"
+              onClick={handleClick}
+            >
               {manxaData.title}
             </CardTitle>
           </CardHeader>
