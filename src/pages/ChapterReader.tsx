@@ -172,6 +172,7 @@ export default function ChapterReader() {
               ) : null;
             })()}
       </div>
+
       {imageUrls.data.map((imageUrl, index) => (
         <ChapterImage
           className={widthClasses[zoomLevel]}
@@ -180,6 +181,44 @@ export default function ChapterReader() {
           index={index}
         />
       ))}
+
+      <div className="flex mb-5 mt-10 gap-2 bg-background p-1 rounded-b-sm">
+        {isErrorManxaInfo
+          ? null
+          : (() => {
+              const next = nextChapter();
+              return next ? (
+                <Button variant="outline" size="sm" className="cursor-pointer">
+                  <Link
+                    to={`/manxa/${extractSlug(
+                      next,
+                      "https://www.mangakakalot.gg/manga/"
+                    )}`}
+                  >
+                    Previous
+                  </Link>
+                </Button>
+              ) : null;
+            })()}
+
+        {isErrorManxaInfo
+          ? null
+          : (() => {
+              const prev = previousChapter();
+              return prev ? (
+                <Button variant="outline" size="sm" className="cursor-pointer">
+                  <Link
+                    to={`/manxa/${extractSlug(
+                      prev,
+                      "https://www.mangakakalot.gg/manga/"
+                    )}`}
+                  >
+                    Next
+                  </Link>
+                </Button>
+              ) : null;
+            })()}
+      </div>
 
       <ScrollToTopButton className="fixed bottom-2 right-2" />
     </div>

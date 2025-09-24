@@ -7,6 +7,7 @@ import ManxaCard from "@/components/ManxaCard";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { extractSlug } from "@/lib/utils";
+import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 
 export default function Home(): JSX.Element {
   // fetch list of manxa data
@@ -49,6 +50,26 @@ export default function Home(): JSX.Element {
           .concat(data.data.results.slice(3, 4))}
       ></ManxaCarousel>
       <hr className="w-full mt-2 mb-2 border-border" />
+      <h1 className="w-full text-center font-semibold text-xl mt-10 mb-10">
+        Announcements
+      </h1>
+      <div className="w-full max-w-4xl grid grid-cols-2 gap-5 p-2">
+        <Card className="items-center px-4">
+          <CardTitle>🌙 Dark Mode Available</CardTitle>
+          <CardDescription>
+            Dark mode is here! Toggle themes anytime with the button in the
+            top-right corner.
+          </CardDescription>
+        </Card>
+        <Card className="items-center px-4">
+          <CardTitle>🚀 Improved Discover Page</CardTitle>
+          <CardDescription>
+            We've added infinite scrolling to the Discover page. Browse more
+            titles without constantly clicking "next" - just scroll down and new
+            manga will load automatically.
+          </CardDescription>
+        </Card>
+      </div>
       <h1 className="w-full text-center font-semibold text-xl mt-10 mb-10">
         Top Manxa
       </h1>
