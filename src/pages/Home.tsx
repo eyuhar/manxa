@@ -1,7 +1,7 @@
 import type { JSX } from "react";
 import { useQuery } from "@tanstack/react-query";
 import ManxaCarousel from "../components/ManxaCarousel";
-import { fetchManxaList } from "../services/api";
+import { fetchManxaListDex } from "../services/api";
 import type { Manxa } from "@/types";
 import ManxaCard from "@/components/ManxaCard";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ export default function Home(): JSX.Element {
   // fetch list of manxa data
   const { data, isLoading } = useQuery({
     queryKey: ["featuredManxas"],
-    queryFn: () => fetchManxaList(1),
+    queryFn: () => fetchManxaListDex(1),
     staleTime: 1000 * 60 * 60, // 1 hour
   });
 
@@ -75,13 +75,7 @@ export default function Home(): JSX.Element {
       </h1>
       <div className="flex flex-wrap gap-8 max-w-6xl items-center justify-center">
         {data.data.results.slice(4).map((manxa: Manxa, i: number) => (
-          <Link
-            to={`/manxa/${extractSlug(
-              manxa.url,
-              "https://www.mangakakalot.gg/manga/"
-            )}`}
-            key={i}
-          >
+          <Link to={`/manxa/${manxa.title}}`} key={i}>
             <ManxaCard manxa={manxa} />
           </Link>
         ))}

@@ -10,7 +10,73 @@ import type {
   FetchChapterProgressResponse,
   ManageChapterProgressResponse,
   FetchHistoryResponse,
+  Manxa,
 } from "@/types";
+
+// fetches a list of manxas from the new MangaDex API
+export async function fetchManxaListDex(page = 1): Promise<ManxaListResponse> {
+  try {
+    const res = await fetch(
+      `https://api.mangadex.org/manga?limit=20&offset=${
+        (page - 1) * 20
+      }&includes[]=cover_art&order[followedCount]=desc`
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch manga list from new API");
+    }
+
+    const json = await res.json();
+
+    // MangaDex gibt result: "ok" oder "error"
+    const success = json.result === "ok";
+
+    // Falls die API-Response ein Array in json.data hat
+    const results: Manxa[] = (
+      Array.isArray(json.data) ? json.data : [json.data]
+    ).map((item: any): Manxa => {
+      const titleObj = item.attributes.title || {};
+      const title =
+        titleObj.en || Object.values(titleObj)[0] || "Unknown title";
+
+      const descObj = item.attributes.description || {};
+      const summary = descObj.en || Object.values(descObj)[0] || "";
+
+      // cover_art-Datei finden
+      const coverRel = item.relationships?.find(
+        (r: any) => r.type === "cover_art"
+      );
+      const fileName = coverRel?.attributes?.fileName;
+
+      const img = fileName
+        ? `https://uploads.mangadex.org/covers/${item.id}/${fileName}.256.jpg`
+        : "";
+
+      return {
+        title,
+        url: `https://api.mangadex.org/manga/${item.id}`,
+        img,
+        newestChapter: item.attributes.lastChapter || "",
+        summary,
+      };
+    });
+
+    // Endgültig im alten Format zurückgeben
+    const response: ManxaListResponse = {
+      success,
+      data: {
+        totalResults: 0,
+        totalPages: 0,
+        results,
+      },
+    };
+
+    return response;
+  } catch (error) {
+    console.error("fetchManxaList Error", error);
+    throw error;
+  }
+}
 
 //fetches a list of manxas from the API
 export async function fetchManxaList(page = 1): Promise<ManxaListResponse> {
