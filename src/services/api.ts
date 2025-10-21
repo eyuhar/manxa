@@ -132,7 +132,8 @@ export async function fetchManxaDex(
 
     // Fetch rating + follows from statistics endpoint
     const statsRes = await fetch(
-      `https://api.mangadex.org/statistics/manga/${id}`
+      "https://manxa-backend.abrdns.com/api/proxy-dex?url=" +
+        encodeURIComponent(`https://api.mangadex.org/statistics/manga/${id}`)
     );
     if (!statsRes.ok) throw new Error("Failed to fetch manga statistics");
     const statsData = await statsRes.json();
@@ -142,7 +143,10 @@ export async function fetchManxaDex(
 
     // Fetch all chapters for this manga
     const chaptersRes = await fetch(
-      `https://api.mangadex.org/manga/${id}/feed?limit=500&translatedLanguage[]=en&order[chapter]=desc`
+      "https://manxa-backend.abrdns.com/api/proxy-dex?url=" +
+        encodeURIComponent(
+          `https://api.mangadex.org/manga/${id}/feed?limit=500&translatedLanguage[]=en&order[chapter]=desc`
+        )
     );
     if (!chaptersRes.ok) throw new Error("Failed to fetch chapters");
     const chaptersData = await chaptersRes.json();
