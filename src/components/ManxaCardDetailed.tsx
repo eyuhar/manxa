@@ -58,7 +58,10 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
       <div className="[@media(max-width:655px)]:hidden flex h-100 max-w-dvw items-center rounded-xl border-gray-200">
         <img
           className="rounded-xl h-80 cursor-pointer"
-          src={manxaData.img}
+          src={
+            "https://manxa-backend.abrdns.com/api/proxy-dex?url=" +
+            encodeURIComponent(manxaData.img)
+          }
           alt={manxaData.title}
           onClick={handleClick}
         />
@@ -115,7 +118,10 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
       <div className="[@media(min-width:655px)]:hidden w-full flex flex-col justify-center h-100 items-center">
         <img
           className="rounded-xl h-80 cursor-pointer"
-          src={manxaData.img}
+          src={
+            "https://manxa-backend.abrdns.com/api/proxy-dex?url=" +
+            encodeURIComponent(manxaData.img)
+          }
           alt={manxaData.title}
           onClick={handleClick}
         />

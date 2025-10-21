@@ -461,7 +461,10 @@ export default function ManxaDetail() {
         <div className="h-80 overflow-hidden flex shrink-0 justify-center items-center">
           <img
             className="rounded-md h-full object-cover"
-            src={manxa.img}
+            src={
+              "https://manxa-backend.abrdns.com/api/proxy-dex?url=" +
+              encodeURIComponent(manxa.img)
+            }
             alt={manxa.title}
           />
         </div>
