@@ -19,10 +19,13 @@ import { getCountryCode } from "@/lib/utils";
 // fetches a list of manxa from the new MangaDex API
 export async function fetchManxaListDex(page = 1): Promise<ManxaListResponse> {
   try {
+    const apiUrl = `https://api.mangadex.org/manga?limit=24&offset=${
+      (page - 1) * 20
+    }&includes[]=cover_art&availableTranslatedLanguage[]=en&order[rating]=desc`;
+
     const res = await fetch(
-      `https://api.mangadex.org/manga?limit=24&offset=${
-        (page - 1) * 20
-      }&includes[]=cover_art&order[rating]=desc`
+      "https://manxa-backend.abrdns.com/api/proxy-dex?url=" +
+        encodeURIComponent(apiUrl)
     );
 
     if (!res.ok) {
@@ -105,10 +108,12 @@ export async function fetchManxaDex(
   try {
     const id = url.split("/").pop(); // Extract manga ID from URL
     if (!id) throw new Error("Invalid Manga URL provided");
+    const apiUrl = `https://api.mangadex.org/manga/${id}?includes[]=cover_art`;
 
     // Fetch main manga data including cover_art
     const res = await fetch(
-      `https://api.mangadex.org/manga/${id}?includes[]=cover_art`
+      "https://manxa-backend.abrdns.com/api/proxy-dex?url=" +
+        encodeURIComponent(apiUrl)
     );
     if (!res.ok) throw new Error("Failed to fetch manga data");
     const data = await res.json();
@@ -137,7 +142,7 @@ export async function fetchManxaDex(
 
     // Fetch all chapters for this manga
     const chaptersRes = await fetch(
-      `https://api.mangadex.org/manga/${id}/feed?limit=500&order[chapter]=desc`
+      `https://api.mangadex.org/manga/${id}/feed?limit=500&translatedLanguage[]=en&order[chapter]=desc`
     );
     if (!chaptersRes.ok) throw new Error("Failed to fetch chapters");
     const chaptersData = await chaptersRes.json();
@@ -224,10 +229,13 @@ export async function searchManxasDex(
   page = 1
 ): Promise<ManxaListResponse> {
   try {
+    const apiUrl = `https://api.mangadex.org/manga?title=${term}&limit=24&offset=${
+      (page - 1) * 20
+    }&includes[]=cover_art&availableTranslatedLanguage[]=en&order[rating]=desc`;
+
     const res = await fetch(
-      `https://api.mangadex.org/manga?title=${term}&limit=24&offset=${
-        (page - 1) * 20
-      }&includes[]=cover_art&order[rating]=desc`
+      "https://manxa-backend.abrdns.com/api/proxy-dex?url=" +
+        encodeURIComponent(apiUrl)
     );
 
     if (!res.ok) {

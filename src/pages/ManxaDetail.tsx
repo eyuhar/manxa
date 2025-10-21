@@ -30,7 +30,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import AutoSizer from "react-virtualized-auto-sizer";
-import getUnicodeFlagIcon from "country-flag-icons/unicode";
 
 export default function ManxaDetail() {
   const { id } = useParams<{ id: string }>();
@@ -339,10 +338,7 @@ export default function ManxaDetail() {
                 : "")
             }
           >
-            {"Chapter " +
-              chapter.chapter +
-              " " +
-              getUnicodeFlagIcon(chapter.language)}
+            {"Chapter " + chapter.chapter}
           </CardTitle>
           <CardDescription>{chapter.chapterUploadTime}</CardDescription>
         </div>
