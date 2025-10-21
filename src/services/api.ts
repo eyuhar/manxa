@@ -11,15 +11,18 @@ import type {
   ManageChapterProgressResponse,
   FetchHistoryResponse,
   Manxa,
+  ManxaDetailed,
+  Chapter,
 } from "@/types";
+import { getCountryCode } from "@/lib/utils";
 
-// fetches a list of manxas from the new MangaDex API
+// fetches a list of manxa from the new MangaDex API
 export async function fetchManxaListDex(page = 1): Promise<ManxaListResponse> {
   try {
     const res = await fetch(
-      `https://api.mangadex.org/manga?limit=20&offset=${
+      `https://api.mangadex.org/manga?limit=24&offset=${
         (page - 1) * 20
-      }&includes[]=cover_art&order[followedCount]=desc`
+      }&includes[]=cover_art&order[rating]=desc`
     );
 
     if (!res.ok) {
@@ -28,10 +31,8 @@ export async function fetchManxaListDex(page = 1): Promise<ManxaListResponse> {
 
     const json = await res.json();
 
-    // MangaDex gibt result: "ok" oder "error"
     const success = json.result === "ok";
 
-    // Falls die API-Response ein Array in json.data hat
     const results: Manxa[] = (
       Array.isArray(json.data) ? json.data : [json.data]
     ).map((item: any): Manxa => {
@@ -42,7 +43,7 @@ export async function fetchManxaListDex(page = 1): Promise<ManxaListResponse> {
       const descObj = item.attributes.description || {};
       const summary = descObj.en || Object.values(descObj)[0] || "";
 
-      // cover_art-Datei finden
+      //find cover art relationship
       const coverRel = item.relationships?.find(
         (r: any) => r.type === "cover_art"
       );
@@ -61,7 +62,7 @@ export async function fetchManxaListDex(page = 1): Promise<ManxaListResponse> {
       };
     });
 
-    // Endgültig im alten Format zurückgeben
+    // Return in the old format
     const response: ManxaListResponse = {
       success,
       data: {
@@ -97,6 +98,107 @@ export async function fetchManxaList(page = 1): Promise<ManxaListResponse> {
   }
 }
 
+// Fetches detailed information about a specific manga from the MangaDex API
+export async function fetchManxaDex(
+  url: string
+): Promise<ManxaDetailedResponse> {
+  try {
+    const id = url.split("/").pop(); // Extract manga ID from URL
+    if (!id) throw new Error("Invalid Manga URL provided");
+
+    // Fetch main manga data including cover_art
+    const res = await fetch(
+      `https://api.mangadex.org/manga/${id}?includes[]=cover_art`
+    );
+    if (!res.ok) throw new Error("Failed to fetch manga data");
+    const data = await res.json();
+
+    const manga = data.data;
+    const attrs = manga.attributes;
+
+    // Build image URL using cover_art relationship
+    const coverRel = manga.relationships.find(
+      (rel: any) => rel.type === "cover_art"
+    );
+    const coverFileName = coverRel?.attributes?.fileName;
+    const img = coverFileName
+      ? `https://uploads.mangadex.org/covers/${manga.id}/${coverFileName}.256.jpg`
+      : "";
+
+    // Fetch rating + follows from statistics endpoint
+    const statsRes = await fetch(
+      `https://api.mangadex.org/statistics/manga/${id}`
+    );
+    if (!statsRes.ok) throw new Error("Failed to fetch manga statistics");
+    const statsData = await statsRes.json();
+    const stats = statsData.statistics[id];
+    const rating = stats?.rating?.bayesian?.toFixed(2) || "N/A";
+    const views = stats?.follows || 0;
+
+    // Fetch all chapters for this manga
+    const chaptersRes = await fetch(
+      `https://api.mangadex.org/manga/${id}/feed?limit=500&order[chapter]=desc`
+    );
+    if (!chaptersRes.ok) throw new Error("Failed to fetch chapters");
+    const chaptersData = await chaptersRes.json();
+
+    // Helper function to format dates
+    const formatDate = (isoDate: string) =>
+      new Date(isoDate).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+
+    // Build chapters array with URLs
+    const chapters: Chapter[] = chaptersData.data.map((ch: any) => ({
+      chapter: ch.attributes.chapter || "N/A",
+      chapterUrl: `https://api.mangadex.org/at-home/server/${ch.id}`,
+      chapterViews: 0,
+      chapterUploadTime: formatDate(ch.attributes.publishAt),
+      language: getCountryCode(ch.attributes.translatedLanguage),
+    }));
+
+    // Extract genres (all tags with English names)
+    const genres = (attrs.tags || [])
+      .map((t: any) => t.attributes?.name?.en)
+      .filter(Boolean);
+
+    // Extract authors
+    const authors = manga.relationships
+      .filter((rel: any) => rel.type === "author")
+      .map((rel: any) => rel.attributes?.name)
+      .filter(Boolean)
+      .join(", ");
+
+    // Build final ManxaDetailed object
+    const manxaDetailed: ManxaDetailed = {
+      img,
+      title: attrs.title?.en || "Unknown Title",
+      authors,
+      status: attrs.status || "unknown",
+      lastUpdate: formatDate(attrs.updatedAt),
+      views,
+      genres,
+      rating,
+      summary: attrs.description?.en || "No description available.",
+      chapters,
+    };
+
+    // Return wrapped response
+    return {
+      success: true,
+      data: manxaDetailed,
+    };
+  } catch (error) {
+    console.error("fetchManxa Error", error);
+    return {
+      success: false,
+      data: {} as ManxaDetailed, // fallback to empty data object
+    };
+  }
+}
+
 //fetches detailed information about a specific manxa from the API
 export async function fetchManxa(url: string): Promise<ManxaDetailedResponse> {
   try {
@@ -112,6 +214,72 @@ export async function fetchManxa(url: string): Promise<ManxaDetailedResponse> {
     return res.json();
   } catch (error) {
     console.error("fetchManxa Error", error);
+    throw error;
+  }
+}
+
+// fetches a list of manxa from the new MangaDex API
+export async function searchManxasDex(
+  term: string,
+  page = 1
+): Promise<ManxaListResponse> {
+  try {
+    const res = await fetch(
+      `https://api.mangadex.org/manga?title=${term}&limit=24&offset=${
+        (page - 1) * 20
+      }&includes[]=cover_art&order[rating]=desc`
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch manga list from new API");
+    }
+
+    const json = await res.json();
+
+    const success = json.result === "ok";
+
+    const results: Manxa[] = (
+      Array.isArray(json.data) ? json.data : [json.data]
+    ).map((item: any): Manxa => {
+      const titleObj = item.attributes.title || {};
+      const title =
+        titleObj.en || Object.values(titleObj)[0] || "Unknown title";
+
+      const descObj = item.attributes.description || {};
+      const summary = descObj.en || Object.values(descObj)[0] || "";
+
+      //find cover art relationship
+      const coverRel = item.relationships?.find(
+        (r: any) => r.type === "cover_art"
+      );
+      const fileName = coverRel?.attributes?.fileName;
+
+      const img = fileName
+        ? `https://uploads.mangadex.org/covers/${item.id}/${fileName}.256.jpg`
+        : "";
+
+      return {
+        title,
+        url: `https://api.mangadex.org/manga/${item.id}`,
+        img,
+        newestChapter: item.attributes.lastChapter || "",
+        summary,
+      };
+    });
+
+    // Return in the old format
+    const response: ManxaListResponse = {
+      success,
+      data: {
+        totalResults: 0,
+        totalPages: 0,
+        results,
+      },
+    };
+
+    return response;
+  } catch (error) {
+    console.error("fetchManxaList Error", error);
     throw error;
   }
 }

@@ -2,8 +2,7 @@ import ManxaCard from "@/components/ManxaCard";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { extractSlug } from "@/lib/utils";
-import { fetchManxaList, searchManxas } from "@/services/api";
+import { fetchManxaListDex, searchManxasDex } from "@/services/api";
 import type { Manxa } from "@/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState, type JSX } from "react";
@@ -27,10 +26,12 @@ function Discover(): JSX.Element {
   } = useInfiniteQuery({
     queryKey: ["manxaSearch", query],
     queryFn: ({ pageParam = 1 }) =>
-      isSearching ? searchManxas(query, pageParam) : fetchManxaList(pageParam),
+      isSearching
+        ? searchManxasDex(query, pageParam)
+        : fetchManxaListDex(pageParam),
     getNextPageParam: (lastPage, allPages) => {
       if (isSearching) {
-        return lastPage?.data?.results?.length === 20
+        return lastPage?.data?.results?.length === 24
           ? allPages.length + 1
           : undefined;
       } else {
@@ -128,10 +129,7 @@ function Discover(): JSX.Element {
         {data?.pages.map((page, pageIndex) =>
           page.data.results.map((manxa: Manxa) => (
             <Link
-              to={`/manxa/${extractSlug(
-                manxa.url,
-                "https://www.mangakakalot.gg/manga/"
-              )}`}
+              to={`/manxa/${manxa.url.split("/").pop()}`}
               key={`${pageIndex}-${manxa.title}`}
             >
               <ManxaCard manxa={manxa} />

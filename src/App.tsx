@@ -45,7 +45,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="manxa/:title" element={<ManxaDetail />} />
+          <Route path="manxa/:id" element={<ManxaDetail />} />
           <Route path="/manxa/:title/:chapter" element={<ChapterReader />} />
           <Route path="*" element={<NotFound />} />
         </Route>

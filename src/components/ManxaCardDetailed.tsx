@@ -1,4 +1,4 @@
-import { fetchManxa } from "@/services/api";
+import { fetchManxaDex } from "@/services/api";
 import type { ManxaDetailed } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import type { JSX } from "react";
@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from "./ui/card";
 import { useNavigate } from "react-router-dom";
-import { extractSlug } from "@/lib/utils";
 import StarRating from "./StarRating";
 
 type Props = {
@@ -22,7 +21,7 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
   //fetch data of required manxa
   const { data, isLoading } = useQuery({
     queryKey: ["manxaDetail", url],
-    queryFn: () => fetchManxa(url),
+    queryFn: () => fetchManxaDex(url),
     staleTime: 1000 * 60 * 15, // 15 minutes
   });
   const navigate = useNavigate();
@@ -51,9 +50,7 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
   const manxaData: ManxaDetailed = data.data;
 
   const handleClick = () => {
-    navigate(
-      `/manxa/${extractSlug(url, "https://www.mangakakalot.gg/manga/")}`
-    );
+    navigate(`/manxa/${url.split("/").pop()}`);
   };
 
   return (
@@ -61,10 +58,7 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
       <div className="[@media(max-width:655px)]:hidden flex h-100 max-w-dvw items-center rounded-xl border-gray-200">
         <img
           className="rounded-xl h-80 cursor-pointer"
-          src={
-            "https://manxa-backend.abrdns.com/api/image-proxy?url=" +
-            encodeURIComponent(manxaData.img)
-          }
+          src={manxaData.img}
           alt={manxaData.title}
           onClick={handleClick}
         />
@@ -91,13 +85,13 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
               <CardDescription>{manxaData.lastUpdate}</CardDescription>
             </div>
             <div className="flex flex-col">
-              <CardTitle className="font-medium text-sm">Views</CardTitle>
+              <CardTitle className="font-medium text-sm">Follows</CardTitle>
               <CardDescription>
                 {manxaData.views.toLocaleString("en-US")}
               </CardDescription>
             </div>
             <div className="flex flex-col">
-              <CardTitle className="font-medium text-sm">Genres</CardTitle>
+              <CardTitle className="font-medium text-sm">Tags</CardTitle>
               <CardDescription>{manxaData.genres.join(", ")}</CardDescription>
             </div>
             <div className="flex flex-col">
@@ -121,10 +115,7 @@ export default function ManxaCardDetailed({ url }: Props): JSX.Element {
       <div className="[@media(min-width:655px)]:hidden w-full flex flex-col justify-center h-100 items-center">
         <img
           className="rounded-xl h-80 cursor-pointer"
-          src={
-            "https://manxa-backend.abrdns.com/api/image-proxy?url=" +
-            encodeURIComponent(manxaData.img)
-          }
+          src={manxaData.img}
           alt={manxaData.title}
           onClick={handleClick}
         />

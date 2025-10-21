@@ -20,6 +20,7 @@ export type Chapter = {
   chapterUrl: string;
   chapterViews: number;
   chapterUploadTime: string;
+  language: string;
 };
 
 export type ManxaDetailed = {

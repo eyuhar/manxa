@@ -30,3 +30,23 @@ export function unslug(slug: string): string {
 export function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+// Extracts the country code from a language code.
+export function getCountryCode(languageCode: string): string {
+  // Split the code by hyphen
+  const parts: string[] = languageCode.split("-");
+
+  // Take the last part if it exists, otherwise use the original code
+  let countryCode: string =
+    parts.length > 1 ? parts[parts.length - 1] : languageCode;
+
+  // Convert to uppercase
+  countryCode = countryCode.toUpperCase();
+
+  // Special rule: if code is "EN", return "GB"
+  if (countryCode === "EN") {
+    return "GB";
+  }
+
+  return countryCode;
+}

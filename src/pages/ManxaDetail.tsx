@@ -1,13 +1,13 @@
 import {
   fetchChapterProgress,
-  fetchManxa,
-  fetchManxaList,
+  fetchManxaDex,
+  fetchManxaListDex,
   markChapterAsRead,
   markChapterAsUnread,
 } from "@/services/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
-import { buildUrl, extractSlug } from "@/lib/utils";
+import { buildUrl } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -30,12 +30,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import AutoSizer from "react-virtualized-auto-sizer";
+import getUnicodeFlagIcon from "country-flag-icons/unicode";
 
 export default function ManxaDetail() {
-  const { title } = useParams<{ title: string }>();
-  const manxaUrl = title
-    ? buildUrl("https://www.mangakakalot.gg/manga/", title)
-    : "";
+  const { id } = useParams<{ id: string }>();
+  const manxaUrl = id ? buildUrl("https://api.mangadex.org/manga/", id) : "";
   const { token, logout } = useAuth();
   const queryClient = useQueryClient();
   const scrollOffsetRef = useRef(0);
@@ -44,7 +43,7 @@ export default function ManxaDetail() {
   // using useMemo because it triggers before rendering
   useMemo(() => {
     scrollOffsetRef.current = 0;
-  }, [title]);
+  }, [id]);
 
   // Fetch detailed information for the selected manxa
   const {
@@ -54,10 +53,8 @@ export default function ManxaDetail() {
   } = useQuery({
     queryKey: ["manxaDetail", manxaUrl],
     queryFn: () =>
-      title
-        ? fetchManxa(buildUrl("https://www.mangakakalot.gg/manga/", title))
-        : Promise.reject("No title provided"),
-    enabled: !!title,
+      id ? fetchManxaDex(manxaUrl) : Promise.reject("No title provided"),
+    enabled: !!id,
     retry: false,
     staleTime: 1000 * 60 * 15, // 15 minutes
   });
@@ -66,7 +63,7 @@ export default function ManxaDetail() {
   const { data: featuredManxas, isLoading: isLoadingFeaturedManxas } = useQuery(
     {
       queryKey: ["featuredManxas"],
-      queryFn: () => fetchManxaList(1),
+      queryFn: () => fetchManxaListDex(1),
       staleTime: 1000 * 60 * 60, // 1 hour
     }
   );
@@ -329,10 +326,7 @@ export default function ManxaDetail() {
 
     return (
       <Link
-        to={`/manxa/${extractSlug(
-          chapter.chapterUrl,
-          "https://www.mangakakalot.gg/manga/"
-        )}`}
+        to={`/manxa/${chapter.chapterUrl}`}
         className="flex w-full items-center justify-between hover:bg-accent hover:text-accent-foreground p-2 rounded-md"
         style={style}
       >
@@ -345,7 +339,10 @@ export default function ManxaDetail() {
                 : "")
             }
           >
-            {chapter.chapter}
+            {"Chapter " +
+              chapter.chapter +
+              " " +
+              getUnicodeFlagIcon(chapter.language)}
           </CardTitle>
           <CardDescription>{chapter.chapterUploadTime}</CardDescription>
         </div>
@@ -468,10 +465,7 @@ export default function ManxaDetail() {
         <div className="h-80 overflow-hidden flex shrink-0 justify-center items-center">
           <img
             className="rounded-md h-full object-cover"
-            src={
-              "https://manxa-backend.abrdns.com/api/image-proxy?url=" +
-              encodeURIComponent(manxa.img)
-            }
+            src={manxa.img}
             alt={manxa.title}
           />
         </div>
@@ -545,7 +539,7 @@ export default function ManxaDetail() {
                 </CardDescription>
               </div>
               <DialogAdd
-                title={title!}
+                title={id!}
                 className="self-end [@media(max-width:655px)]:w-full [@media(max-width:655px)]:self-center [@media(max-width:655px)]:mt-3"
               />
             </div>
@@ -556,7 +550,7 @@ export default function ManxaDetail() {
         <CardTitle className="font-medium text-sm mb-2 self-center">
           Summary
         </CardTitle>
-        <CardDescription className="wrap-anywhere">
+        <CardDescription className="wrap-anywhere self-center">
           {manxa.summary}
         </CardDescription>
       </div>
@@ -595,13 +589,7 @@ export default function ManxaDetail() {
                 {featuredManxas?.data.results
                   .slice(0, 3)
                   .map((manxa, index) => (
-                    <Link
-                      to={`/manxa/${extractSlug(
-                        manxa.url,
-                        "https://www.mangakakalot.gg/manga/"
-                      )}`}
-                      key={index}
-                    >
+                    <Link to={`/manxa/${manxa.url}`} key={index}>
                       <ManxaCard manxa={manxa} />
                     </Link>
                   ))}

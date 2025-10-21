@@ -6,7 +6,6 @@ import type { Manxa } from "@/types";
 import ManxaCard from "@/components/ManxaCard";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { extractSlug } from "@/lib/utils";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 
 export default function Home(): JSX.Element {
@@ -75,7 +74,7 @@ export default function Home(): JSX.Element {
       </h1>
       <div className="flex flex-wrap gap-8 max-w-6xl items-center justify-center">
         {data.data.results.slice(4).map((manxa: Manxa, i: number) => (
-          <Link to={`/manxa/${manxa.title}}`} key={i}>
+          <Link to={`/manxa/${manxa.url.split("/").pop()}`} key={i}>
             <ManxaCard manxa={manxa} />
           </Link>
         ))}
