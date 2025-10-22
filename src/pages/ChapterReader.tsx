@@ -1,8 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { fetchChapterImageUrls, fetchManxaDex } from "@/services/api";
+import { fetchChapterImageUrlsDex, fetchManxaDex } from "@/services/api";
 import ChapterImage from "@/components/ChapterImage";
-import { extractSlug } from "@/lib/utils";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
@@ -38,7 +37,7 @@ export default function ChapterReader() {
     isError: isErrorImageUrls,
   } = useQuery({
     queryKey: ["chapterImageUrls", chapterUrl],
-    queryFn: () => fetchChapterImageUrls(chapterUrl),
+    queryFn: () => fetchChapterImageUrlsDex(chapterUrl),
     staleTime: 1000 * 60 * 60, // 1 hour
   });
 
@@ -93,7 +92,7 @@ export default function ChapterReader() {
     if (currentIndex === -1 || currentIndex === chapters.length - 1) {
       return null; // No next chapter available
     }
-    const nextChapter = chapters[currentIndex + 1].chapterUrl;
+    const nextChapter = chapters[currentIndex + 1];
     return nextChapter;
   }
 
@@ -108,7 +107,7 @@ export default function ChapterReader() {
     if (currentIndex <= 0) {
       return null; // No previous chapter available
     }
-    const prevChapter = chapters[currentIndex - 1].chapterUrl;
+    const prevChapter = chapters[currentIndex - 1];
     return prevChapter;
   }
 
@@ -125,10 +124,9 @@ export default function ChapterReader() {
               return next ? (
                 <Button variant="outline" size="sm" className="cursor-pointer">
                   <Link
-                    to={`/manxa/${extractSlug(
-                      next,
-                      "https://www.mangakakalot.gg/manga/"
-                    )}`}
+                    to={`/manxa/${manxaId}/${next.chapterUrl.split("/")[5]}/${
+                      manxaInfo!.data.title + " Chapter " + next.chapter
+                    }`}
                   >
                     Previous
                   </Link>
@@ -164,10 +162,9 @@ export default function ChapterReader() {
               return prev ? (
                 <Button variant="outline" size="sm" className="cursor-pointer">
                   <Link
-                    to={`/manxa/${extractSlug(
-                      prev,
-                      "https://www.mangakakalot.gg/manga/"
-                    )}`}
+                    to={`/manxa/${manxaId}/${prev.chapterUrl.split("/")[5]}/${
+                      manxaInfo!.data.title + " Chapter " + prev.chapter
+                    }`}
                   >
                     Next
                   </Link>
@@ -193,10 +190,9 @@ export default function ChapterReader() {
               return next ? (
                 <Button variant="outline" size="sm" className="cursor-pointer">
                   <Link
-                    to={`/manxa/${extractSlug(
-                      next,
-                      "https://www.mangakakalot.gg/manga/"
-                    )}`}
+                    to={`/manxa/${manxaId}/${next.chapterUrl.split("/")[5]}//${
+                      manxaInfo!.data.title + " Chapter " + next.chapter
+                    }`}
                   >
                     Previous
                   </Link>
@@ -211,10 +207,9 @@ export default function ChapterReader() {
               return prev ? (
                 <Button variant="outline" size="sm" className="cursor-pointer">
                   <Link
-                    to={`/manxa/${extractSlug(
-                      prev,
-                      "https://www.mangakakalot.gg/manga/"
-                    )}`}
+                    to={`/manxa/${manxaId}/${prev.chapterUrl.split("/")[5]}//${
+                      manxaInfo!.data.title + " Chapter " + prev.chapter
+                    }`}
                   >
                     Next
                   </Link>

@@ -26,6 +26,7 @@ function History(): JSX.Element {
     ? Array.from(new Set(historyData.history.map((item) => item.manxa_url)))
     : [];
 
+  // fetch manxa details for each unique manxa url
   const manxaQueries = useQueries({
     queries: uniqueManxaUrls.map((manxaUrl) => ({
       queryKey: ["manxaDetail", manxaUrl],
@@ -43,6 +44,12 @@ function History(): JSX.Element {
     });
     return map;
   }, [uniqueManxaUrls, manxaQueries]);
+
+  if (uniqueManxaUrls.length === 0) {
+    return (
+      <div className="p-4 text-muted-foreground">No reading history found.</div>
+    );
+  }
 
   if (isLoadingHistoryData || manxaQueries[manxaQueries.length - 1].isLoading) {
     return (

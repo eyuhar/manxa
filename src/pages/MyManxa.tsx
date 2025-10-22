@@ -12,12 +12,11 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
-import { extractSlug } from "@/lib/utils";
 import {
   addList,
   fetchFavorites,
   fetchLists,
-  fetchManxa,
+  fetchManxaDex,
   removeList,
   renameList,
 } from "@/services/api";
@@ -72,7 +71,7 @@ function MyManxa(): JSX.Element {
   const manxaQueries = useQueries({
     queries: favorites.map((fav) => ({
       queryKey: ["manxaDetail", fav.manxa_url],
-      queryFn: () => fetchManxa(fav.manxa_url),
+      queryFn: () => fetchManxaDex(fav.manxa_url),
       enabled: !!fav.manxa_url,
       staleTime: 1000 * 60 * 60, // 1 hour
     })),
@@ -335,10 +334,7 @@ function MyManxa(): JSX.Element {
                   ) : (
                     favoriteData.map((manxa, i) => (
                       <Link
-                        to={`/manxa/${extractSlug(
-                          favorites[i].manxa_url,
-                          "https://www.mangakakalot.gg/manga/"
-                        )}`}
+                        to={`/manxa/${favorites[i].manxa_url.split("/").pop()}`}
                         key={manxa.data.title}
                         className="animate-fade-up"
                         style={{ animationDelay: `${i * 100}ms`, opacity: 0 }}

@@ -102,14 +102,6 @@ function Discover(): JSX.Element {
         />
       </div>
 
-      {data?.pages[0]?.data?.results &&
-        data?.pages[0]?.data?.results?.length > 0 && (
-          <div className="mb-6 text-muted-foreground text-sm mx-5">
-            {data?.pages[0]?.data?.totalResults.toLocaleString("en-US")} results{" "}
-            {query !== "" && `for "${query}"`}
-          </div>
-        )}
-
       {isLoading && (
         <div className="p-4 flex items-center justify-center">
           <svg

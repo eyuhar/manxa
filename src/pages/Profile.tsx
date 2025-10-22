@@ -11,12 +11,11 @@ import { BookOpenText, LibraryBig, Trophy, Star, Clock } from "lucide-react";
 import GenreChart from "@/components/GenreChart";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQueries, useQuery } from "@tanstack/react-query";
-import { fetchHistory, fetchManxa } from "@/services/api";
+import { fetchHistory, fetchManxaDex } from "@/services/api";
 import type { HistoryElement } from "@/types";
-import { capitalizeFirstLetter, extractSlug } from "@/lib/utils";
 
-function getMostReadManxa(history: HistoryElement[]): string | null {
-  if (history.length === 0) return null;
+function getMostReadManxa(history: HistoryElement[]): string {
+  if (history.length === 0) return "No data found";
 
   // Object to store how many times each manxa_url appears
   const counts: Record<string, number> = {};
@@ -27,7 +26,7 @@ function getMostReadManxa(history: HistoryElement[]): string | null {
   });
 
   // Variables to track the most read manxa_url
-  let mostRead: string | null = null;
+  let mostRead: string = "";
   let maxCount = 0;
 
   // Find the manxa_url with the highest count
@@ -38,7 +37,12 @@ function getMostReadManxa(history: HistoryElement[]): string | null {
     }
   }
 
-  return mostRead;
+  let mostReadTitle = "";
+  fetchManxaDex(mostRead).then((res) => {
+    mostReadTitle = res.data.title;
+  });
+
+  return mostReadTitle;
 }
 
 function Profile(): JSX.Element {
@@ -65,7 +69,7 @@ function Profile(): JSX.Element {
   const manxaQueries = useQueries({
     queries: uniqueManxaUrls.map((manxaUrl) => ({
       queryKey: ["manxaDetail", manxaUrl],
-      queryFn: () => fetchManxa(manxaUrl),
+      queryFn: () => fetchManxaDex(manxaUrl),
       enabled: !!manxaUrl,
       staleTime: 1000 * 60 * 60, // 1 hour
     })),
@@ -97,7 +101,7 @@ function Profile(): JSX.Element {
   const NoDataFound: React.FC = () => {
     return (
       <div className="w-full flex items-center justify-center text-muted-foreground text-sm">
-        <span>No Data Found.</span>
+        <span>No data found.</span>
       </div>
     );
   };
@@ -150,7 +154,7 @@ function Profile(): JSX.Element {
         <Card className="justify-center items-center gap-3 p-6 w-[100%] shadow-border">
           <CardTitle className="text-sm flex gap-1 items-center">
             <Trophy className="text-foreground" size={20} />
-            Top 3 Genres
+            Top 3 Tags
           </CardTitle>
           <CardDescription className="text-md h-full flex justify-center items-center">
             {!isLoadingGenreData && genreData.length === 0 ? (
@@ -209,19 +213,14 @@ function Profile(): JSX.Element {
             <Star className="text-foreground" size={20} />
             Most Read Manxa
           </CardTitle>
-          <CardDescription className="text-md h-full flex justify-center items-center wrap-anywhere">
-            {capitalizeFirstLetter(
-              extractSlug(
-                getMostReadManxa(historyData?.history!)!,
-                "https://www.mangakakalot.gg/manga/"
-              )
-            )}
+          <CardDescription className="text-sm h-full flex justify-center items-center wrap-anywhere">
+            {getMostReadManxa(historyData?.history!)!}
           </CardDescription>
         </Card>
       </div>
       <Card className="m-1 mt-2 shadow-border">
         <CardHeader className="w-full justify-center">
-          <CardTitle className="text-sm">Genre Distribution</CardTitle>
+          <CardTitle className="text-sm">Tag Distribution</CardTitle>
         </CardHeader>
         <CardContent className="w-full p-0 min-h-80">
           {isLoadingGenreData ? (

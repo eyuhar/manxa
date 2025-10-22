@@ -21,7 +21,7 @@ export async function fetchManxaListDex(page = 1): Promise<ManxaListResponse> {
   try {
     const apiUrl = `https://api.mangadex.org/manga?limit=24&offset=${
       (page - 1) * 20
-    }&includes[]=cover_art&availableTranslatedLanguage[]=en&order[rating]=desc`;
+    }&includes[]=cover_art&availableTranslatedLanguage[]=en&order[rating]=desc&hasAvailableChapters=true`;
 
     const res = await fetch(
       "https://manxa-backend.abrdns.com/api/proxy-dex?url=" +

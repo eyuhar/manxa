@@ -325,7 +325,7 @@ export default function ManxaDetail() {
 
     return (
       <Link
-        to={`/manxa/${id}/${chapter.chapterUrl.split("/")[4]}/${
+        to={`/manxa/${id}/${chapter.chapterUrl.split("/")[5]}/${
           manxa.title + " Chapter " + chapter.chapter
         }`}
         className="flex w-full items-center justify-between hover:bg-accent hover:text-accent-foreground p-2 rounded-md"
@@ -427,25 +427,31 @@ export default function ManxaDetail() {
   }) {
     return (
       <CardContent className="max-h-[902px] [@media(max-width:900px)]:max-h-[758px] h-[900px] overflow-hidden">
-        <AutoSizer>
-          {({ height, width }) => (
-            <FixedSizeList
-              initialScrollOffset={initialScrollOffset}
-              onScroll={({ scrollOffset }) => {
-                onScroll!(scrollOffset);
-              }}
-              className="scrollbar overflow-y-auto"
-              height={height}
-              width={width}
-              itemCount={manxa.chapters.length}
-              itemSize={70}
-              itemData={manxa.chapters}
-              overscanCount={30}
-            >
-              {ChapterItem}
-            </FixedSizeList>
-          )}
-        </AutoSizer>
+        {manxa.chapters.length === 0 ? (
+          <div className="p-4 text-sm text-muted-foreground mt-20 justify-self-center">
+            No english chapters available.
+          </div>
+        ) : (
+          <AutoSizer>
+            {({ height, width }) => (
+              <FixedSizeList
+                initialScrollOffset={initialScrollOffset}
+                onScroll={({ scrollOffset }) => {
+                  onScroll!(scrollOffset);
+                }}
+                className="scrollbar overflow-y-auto"
+                height={height}
+                width={width}
+                itemCount={manxa.chapters.length}
+                itemSize={70}
+                itemData={manxa.chapters}
+                overscanCount={30}
+              >
+                {ChapterItem}
+              </FixedSizeList>
+            )}
+          </AutoSizer>
+        )}
       </CardContent>
     );
   }
