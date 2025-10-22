@@ -6,15 +6,17 @@ import { fetchManxaListDex, searchManxasDex } from "@/services/api";
 import type { Manxa } from "@/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState, type JSX } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 function Discover(): JSX.Element {
-  // search input for controlled input
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  // actual query that triggers api request
-  const [query, setQuery] = useState<string>("");
+  // URL search parameter (e.g., ?q=berserk)
+  const [searchParams, setSearchParams] = useSearchParams();
+  const queryParam = searchParams.get("q") || "";
 
-  const isSearching = query !== "";
+  // search input for controlled input
+  const [searchTerm, setSearchTerm] = useState<string>(queryParam);
+
+  const isSearching = queryParam !== "";
 
   const {
     data,
@@ -24,10 +26,10 @@ function Discover(): JSX.Element {
     isLoading,
     isError,
   } = useInfiniteQuery({
-    queryKey: ["manxaSearch", query],
+    queryKey: ["manxaSearch", queryParam],
     queryFn: ({ pageParam = 1 }) =>
       isSearching
-        ? searchManxasDex(query, pageParam)
+        ? searchManxasDex(queryParam, pageParam)
         : fetchManxaListDex(pageParam),
     getNextPageParam: (lastPage, allPages) => {
       if (isSearching) {
@@ -68,9 +70,19 @@ function Discover(): JSX.Element {
     };
   }, [loadMoreRef, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
+  // Sync input when URL param changes
+  useEffect(() => {
+    setSearchTerm(queryParam);
+  }, [queryParam]);
+
   // handles search button click
   const handleSearch = () => {
-    setQuery(searchTerm.trim());
+    const trimmed = searchTerm.trim();
+    if (trimmed) {
+      setSearchParams({ q: trimmed });
+    } else {
+      setSearchParams({});
+    }
   };
 
   // handles enter key press
@@ -80,13 +92,18 @@ function Discover(): JSX.Element {
     }
   };
 
+  // "Show all" -> removes q param
+  const handleShowAll = () => {
+    setSearchParams({});
+  };
+
   return (
     <div className="flex flex-col items-center w-full">
       <div className="flex gap-2 w-full justify-center">
         <Button
           variant="outline"
           className="ml-3 cursor-pointer"
-          onClick={() => setQuery("")}
+          onClick={handleShowAll}
         >
           Show all
         </Button>
