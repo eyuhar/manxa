@@ -111,7 +111,8 @@ function History(): JSX.Element {
                     }/${historyItem.chapter}`}
                     className="rounded min-w-14"
                   >
-                    {historyItem.chapter}
+                    {historyItem.chapter.match(/Chapter.*$/i)?.[0].trim() ||
+                      historyItem.chapter}
                   </Link>
                 </p>
                 <p className="text-sm [@media(min-width:655px)]:hidden">
