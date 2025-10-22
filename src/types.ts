@@ -119,6 +119,7 @@ export type FetchChapterProgressResponse = {
 export type HistoryElement = {
   manxa_url: string;
   chapter_url: string;
+  chapter: string;
   read_at: string;
 };
 

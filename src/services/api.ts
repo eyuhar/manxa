@@ -606,7 +606,7 @@ export async function fetchChapterProgress(
 // Marks one or more chapters as read for a user by sending their progress to the API.
 export async function markChapterAsRead(
   token: string,
-  toMark: { manxa_url: string; chapter_url: string }[]
+  toMark: { manxa_url: string; chapter_url: string; chapter: string }[]
 ): Promise<ManageChapterProgressResponse> {
   try {
     const response = await fetch(

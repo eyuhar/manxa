@@ -1,6 +1,5 @@
 import { useAuth } from "@/contexts/AuthContext";
-import { extractSlug } from "@/lib/utils";
-import { fetchHistory, fetchManxa } from "@/services/api";
+import { fetchHistory, fetchManxaDex } from "@/services/api";
 import type { ManxaDetailed } from "@/types";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { useMemo, type JSX } from "react";
@@ -30,7 +29,7 @@ function History(): JSX.Element {
   const manxaQueries = useQueries({
     queries: uniqueManxaUrls.map((manxaUrl) => ({
       queryKey: ["manxaDetail", manxaUrl],
-      queryFn: () => fetchManxa(manxaUrl),
+      queryFn: () => fetchManxaDex(manxaUrl),
       enabled: !!manxaUrl,
       staleTime: 1000 * 60 * 60, // 1 hour
     })),
@@ -82,15 +81,12 @@ function History(): JSX.Element {
           <div className="flex gap-2 p-1 w-full justify-between">
             <div className="flex gap-2">
               <Link
-                to={`/manxa/${extractSlug(
-                  historyItem.manxa_url,
-                  "https://www.mangakakalot.gg/manga/"
-                )}`}
+                to={`/manxa/${historyItem.manxa_url.split("/").pop()}`}
                 className="rounded min-w-14"
               >
                 <img
                   src={
-                    "https://manxa-backend.abrdns.com/api/image-proxy?url=" +
+                    "https://manxa-backend.abrdns.com/api/proxy-dex?url=" +
                     encodeURIComponent(
                       manxaMap.get(historyItem.manxa_url)?.img!
                     )
@@ -102,10 +98,7 @@ function History(): JSX.Element {
               <div className="flex flex-col">
                 <p className="font-medium text-sm overflow-ellipsis hover:underline">
                   <Link
-                    to={`/manxa/${extractSlug(
-                      historyItem.manxa_url,
-                      "https://www.mangakakalot.gg/manga/"
-                    )}`}
+                    to={`/manxa/${historyItem.manxa_url.split("/").pop()}`}
                     className="rounded min-w-14"
                   >
                     {manxaMap.get(historyItem.manxa_url)?.title}
@@ -113,21 +106,12 @@ function History(): JSX.Element {
                 </p>
                 <p className="text-sm hover:underline">
                   <Link
-                    to={`/manxa/${extractSlug(
-                      historyItem.chapter_url,
-                      "https://www.mangakakalot.gg/manga/"
-                    )}`}
+                    to={`/manxa/${historyItem.manxa_url.split("/").pop()}/${
+                      historyItem.chapter_url.split("/")[5]
+                    }/${historyItem.chapter}`}
                     className="rounded min-w-14"
                   >
-                    {"C" +
-                      extractSlug(
-                        historyItem.chapter_url,
-                        "https://www.mangakakalot.gg/manga/" +
-                          extractSlug(
-                            historyItem.manxa_url,
-                            "https://www.mangakakalot.gg/manga/"
-                          )
-                      ).slice(1)}
+                    {historyItem.chapter}
                   </Link>
                 </p>
                 <p className="text-sm [@media(min-width:655px)]:hidden">

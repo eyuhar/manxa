@@ -37,12 +37,15 @@ function getMostReadManxa(history: HistoryElement[]): string {
     }
   }
 
-  let mostReadTitle = "";
-  fetchManxaDex(mostRead).then((res) => {
-    mostReadTitle = res.data.title;
-  });
+  // Get the chapter string
+  const fullTitle =
+    history.find((entry) => entry.manxa_url === mostRead)?.chapter ||
+    "No data found";
 
-  return mostReadTitle;
+  // Remove everything starting from "Chapter"
+  const titleOnly = fullTitle.split("Chapter")[0].trim();
+
+  return titleOnly || fullTitle;
 }
 
 function Profile(): JSX.Element {
@@ -213,8 +216,8 @@ function Profile(): JSX.Element {
             <Star className="text-foreground" size={20} />
             Most Read Manxa
           </CardTitle>
-          <CardDescription className="text-sm h-full flex justify-center items-center wrap-anywhere">
-            {getMostReadManxa(historyData?.history!)!}
+          <CardDescription className="text-md h-full flex justify-center items-center wrap-anywhere">
+            {getMostReadManxa(historyData?.history!)}
           </CardDescription>
         </Card>
       </div>

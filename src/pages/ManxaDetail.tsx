@@ -91,10 +91,11 @@ export default function ManxaDetail() {
 
   // Mutation to mark chapters as read
   const markChapterAsReadMutation = useMutation({
-    mutationFn: (chapterUrls: string[]) => {
-      const toMark = chapterUrls.map((chapterUrl) => ({
+    mutationFn: (chapters: Chapter[]) => {
+      const toMark = chapters.map((ch) => ({
         manxa_url: manxaUrl,
-        chapter_url: chapterUrl,
+        chapter_url: ch.chapterUrl,
+        chapter: manxa.title + " Chapter " + ch.chapter,
       }));
       return markChapterAsRead(token!, toMark);
     },
@@ -186,7 +187,7 @@ export default function ManxaDetail() {
     }
 
     // If the chapter is not read, mark it as read
-    markChapterAsReadMutation.mutate([chapter.chapterUrl]);
+    markChapterAsReadMutation.mutate([chapter]);
   }
 
   // Handle marking a chapter as unread when the button is clicked
@@ -221,7 +222,7 @@ export default function ManxaDetail() {
     );
 
     markChapterAsReadMutation.mutate(
-      manxa.chapters.slice(index).map((ch) => ch.chapterUrl)
+      manxa.chapters.slice(index).map((ch) => ch)
     );
   }
 
