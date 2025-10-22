@@ -325,7 +325,9 @@ export default function ManxaDetail() {
 
     return (
       <Link
-        to={`/manxa/${chapter.chapterUrl}`}
+        to={`/manxa/${id}/${chapter.chapterUrl.split("/")[4]}/${
+          manxa.title + " Chapter " + chapter.chapter
+        }`}
         className="flex w-full items-center justify-between hover:bg-accent hover:text-accent-foreground p-2 rounded-md"
         style={style}
       >
@@ -588,7 +590,10 @@ export default function ManxaDetail() {
                 {featuredManxas?.data.results
                   .slice(0, 3)
                   .map((manxa, index) => (
-                    <Link to={`/manxa/${manxa.url}`} key={index}>
+                    <Link
+                      to={`/manxa/${manxa.url.split("/").pop()}`}
+                      key={index}
+                    >
                       <ManxaCard manxa={manxa} />
                     </Link>
                   ))}

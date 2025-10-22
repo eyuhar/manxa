@@ -46,7 +46,10 @@ function App() {
             }
           />
           <Route path="manxa/:id" element={<ManxaDetail />} />
-          <Route path="/manxa/:title/:chapter" element={<ChapterReader />} />
+          <Route
+            path="/manxa/:manxaId/:chapterId/:chapter"
+            element={<ChapterReader />}
+          />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

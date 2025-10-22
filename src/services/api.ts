@@ -108,7 +108,7 @@ export async function fetchManxaDex(
   try {
     const id = url.split("/").pop(); // Extract manga ID from URL
     if (!id) throw new Error("Invalid Manga URL provided");
-    const apiUrl = `https://api.mangadex.org/manga/${id}?includes[]=cover_art`;
+    const apiUrl = `https://api.mangadex.org/manga/${id}?includes[]=cover_art&includes[]=author`;
 
     // Fetch main manga data including cover_art
     const res = await fetch(
@@ -317,6 +317,44 @@ export async function searchManxas(
   } catch (error) {
     console.error("searchManxas Error", error);
     throw error;
+  }
+}
+
+// fetches a list of image URLs for a specific chapter
+export async function fetchChapterImageUrlsDex(
+  chapterUrl: string,
+  quality: "data" | "dataSaver" = "data" // default: full quality
+): Promise<ChapterImageUrlsResponse> {
+  try {
+    const res = await fetch(
+      "https://manxa-backend.abrdns.com/api/proxy-dex?url=" +
+        encodeURIComponent(chapterUrl)
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch chapter image URLs");
+    }
+
+    const json = await res.json();
+
+    const baseUrl = json.baseUrl;
+    const hash = json.chapter.hash;
+    const images = json.chapter[quality] || [];
+
+    const imageUrls: string[] = images.map(
+      (filename: string) => `${baseUrl}/data/${hash}/${filename}`
+    );
+
+    return {
+      success: true,
+      data: imageUrls,
+    };
+  } catch (error) {
+    console.error("fetchChapterImageUrls Error", error);
+    return {
+      success: false,
+      data: [],
+    };
   }
 }
 

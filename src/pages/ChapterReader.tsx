@@ -1,8 +1,8 @@
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { fetchChapterImageUrls, fetchManxa } from "@/services/api";
+import { fetchChapterImageUrls, fetchManxaDex } from "@/services/api";
 import ChapterImage from "@/components/ChapterImage";
-import { buildUrl, extractSlug, unslug } from "@/lib/utils";
+import { extractSlug } from "@/lib/utils";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
@@ -24,10 +24,13 @@ const widthClasses: Record<ZoomLevel, string> = {
 };
 
 export default function ChapterReader() {
-  const { title, chapter } = useParams<{ title: string; chapter: string }>();
+  const { manxaId, chapterId, chapter } = useParams<{
+    manxaId: string;
+    chapterId: string;
+    chapter: string;
+  }>();
+  const chapterUrl = `https://api.mangadex.org/at-home/server/${chapterId}`;
   const [zoomLevel, setZoomLevel] = useState<ZoomLevel>(5); // Default zoom level
-
-  const chapterUrl = `https://www.mangakakalot.gg/manga/${title}/${chapter}`;
 
   const {
     data: imageUrls,
@@ -44,12 +47,12 @@ export default function ChapterReader() {
     isLoading: isLoadingManxaInfo,
     isError: isErrorManxaInfo,
   } = useQuery({
-    queryKey: ["manxaDetail", title],
+    queryKey: ["manxaDetail", `https://api.mangadex.org/manga/${manxaId}`],
     queryFn: () =>
-      title
-        ? fetchManxa(buildUrl("https://www.mangakakalot.gg/manga/", title))
+      manxaId
+        ? fetchManxaDex(`https://api.mangadex.org/manga/${manxaId}`)
         : Promise.reject("No title provided"),
-    enabled: !!title,
+    enabled: !!manxaId,
     retry: false,
   });
 
@@ -112,7 +115,7 @@ export default function ChapterReader() {
   return (
     <div className="w-full flex flex-col items-center">
       <h1 className="p-1 font-bold mb-6 capitalize text-center w-">
-        {unslug(decodeURIComponent(title || ""))} - {unslug(chapter || "")}
+        {chapter}
       </h1>
       <div className="flex mb-5 gap-2 bg-background p-1 rounded-b-sm">
         {isErrorManxaInfo
