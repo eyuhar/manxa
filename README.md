@@ -10,6 +10,10 @@
   <a href="https://manxa.vercel.app"> <b>>>Live Demo<< </b> </a>
 </p>
 
+<p align="center">
+  <a href="https://github.com/eyuhar/manxa-backend"> <b>>>Manxa Backend<< </b> </a>
+</p>
+
 ## About the Project
 
 **Manxa** is a web application for **searching and reading manxa**.  
